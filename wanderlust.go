@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -21,27 +20,29 @@ func Init() {
 	// Add event handler
 	discord.AddHandler(newMessage)
 
-	// Open session
+	// Open websocket
 	discord.Open()
-	defer discord.Close()
 
-	// Run until code is terminated
+	// Run until process is terminated
 	fmt.Println("Bot running...")
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
+
+	//close websocket
+	defer discord.Close()
 }
 
 func newMessage(discord *discordgo.Session, message *discordgo.MessageCreate) {
 
-	// Ignore bot messaage
+	// Ignore bot messages
 	if message.Author.ID == discord.State.User.ID {
 		return
 	}
 
 	// Respond to messages
 	switch {
-	case strings.Contains(message.Content, "~wanderlust"):
+	case message.Content == "~wanderlust":
 		discord.ChannelMessageSend(message.ChannelID, "response")
 	}
 }
