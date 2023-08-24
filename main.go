@@ -52,5 +52,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	// for commands that use additional input we need strings.Contains
 	case strings.Contains(message.Content, "~createparty"):
 		commands.HandleCreateParty(session, message)
+	case strings.Contains(message.Content, "~joinparty"):
+		commands.HandleJoinParty(session, message)
 	}
 }

@@ -20,6 +20,7 @@ type PartyMember struct {
 	DiscordName string
 	PlayerName  string
 	Class       string // player's job/class
+	Level       int
 }
 
 // create new party entry
@@ -35,11 +36,12 @@ func NewParty(id int, partyType string, time int64) *Party {
 }
 
 // create new member entry
-func NewPartyMember(discordName, playerName, class string) *PartyMember {
+func NewPartyMember(discordName, playerName, class string, level int) *PartyMember {
 	member := &PartyMember{
 		DiscordName: discordName,
 		PlayerName:  playerName,
 		Class:       class,
+		Level:       level,
 	}
 	return member
 }
@@ -51,6 +53,16 @@ func (party *Party) AddMember(member *PartyMember) error {
 	}
 	party.Members = append(party.Members, member)
 	return nil
+}
+
+// Get a party by its ID. Returns nil if the party is not found.
+func GetPartyByID(partyID int) *Party {
+	for _, party := range registeredParties {
+		if party.ID == partyID {
+			return party
+		}
+	}
+	return nil // Party not found
 }
 
 func (party *Party) ShowPartyInfo() string {

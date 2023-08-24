@@ -6,7 +6,7 @@ import (
 
 func TestAddMember(t *testing.T) {
 	p := NewParty(1, "opq", 1234567890)
-	member := NewPartyMember("Discord1", "Player1", "Warrior")
+	member := NewPartyMember("Discord1", "Player1", "Warrior", 120)
 
 	err := p.AddMember(member)
 	if err != nil {
@@ -20,7 +20,7 @@ func TestAddMember(t *testing.T) {
 
 func TestShowPartyInfo(t *testing.T) {
 	p := NewParty(1, "opq", 1234567890)
-	member := NewPartyMember("Discord1", "Player1", "Warrior")
+	member := NewPartyMember("Discord1", "Player1", "Warrior", 120)
 	p.AddMember(member)
 
 	expectedInfo := "Party ID: 1\nParty Type: opq\nParty Time: 1234567890\nParty Members:\nMember 1: &{Discord1 Player1 Warrior}\n"

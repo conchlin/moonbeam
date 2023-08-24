@@ -23,7 +23,7 @@ func partyCreation(message *discordgo.MessageCreate) string {
 	var confirmation string
 
 	// verify all components of the discord syntax
-	id, _type, time, err := processString(message.Content)
+	id, _type, time, err := splitCreatePartyString(message.Content)
 	if err != nil {
 		return fmt.Sprintf("There is an error in the syntax of the party command. Creation is not possible: %v", err)
 	}
@@ -35,7 +35,7 @@ func partyCreation(message *discordgo.MessageCreate) string {
 	return confirmation
 }
 
-func processString(msg string) (int, string, int64, error) {
+func splitCreatePartyString(msg string) (int, string, int64, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 
 	intVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[1]))
