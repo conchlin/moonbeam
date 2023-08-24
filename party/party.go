@@ -14,6 +14,8 @@ type Party struct {
 	Members []*PartyMember // 6 is max
 }
 
+var registeredParties []*Party
+
 type PartyMember struct {
 	DiscordName string
 	PlayerName  string
@@ -27,6 +29,8 @@ func NewParty(id int, partyType string, time int64) *Party {
 		Type: partyType, // todo varify
 		Time: time,
 	}
+
+	registeredParties = append(registeredParties, party)
 	return party
 }
 
@@ -59,6 +63,18 @@ func (party *Party) ShowPartyInfo() string {
 	builder.WriteString("Party Members:\n")
 	for i, member := range party.Members {
 		builder.WriteString(fmt.Sprintf("Member %d: %v\n", i+1, member))
+	}
+
+	return builder.String()
+}
+
+func ShowAllParties() string {
+	var builder strings.Builder
+
+	builder.WriteString("Registered Parties:\n")
+	for _, party := range registeredParties {
+		builder.WriteString(party.ShowPartyInfo())
+		builder.WriteString("\n") // Add an empty line between parties
 	}
 
 	return builder.String()
