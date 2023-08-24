@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"wanderlust/commands"
 
 	"github.com/bwmarrin/discordgo"
@@ -45,5 +46,8 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	switch {
 	case message.Content == "~wanderlust", message.Content == "~help":
 		commands.HandleHelp(session, message)
+	// for commands that use additional input we need strings.Contains
+	case strings.Contains(message.Content, "~createparty"):
+		commands.HandleCreateParty(session, message)
 	}
 }
