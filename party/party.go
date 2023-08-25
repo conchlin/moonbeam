@@ -15,6 +15,7 @@ type Party struct {
 }
 
 var registeredParties []*Party
+var idIncrement = 1
 
 type PartyMember struct {
 	DiscordName string
@@ -24,14 +25,15 @@ type PartyMember struct {
 }
 
 // create new party entry
-func NewParty(id int, partyType string, time int64) *Party {
+func NewParty(partyType string, time int64) *Party {
 	party := &Party{
-		ID:   id,        // todo auto increment
-		Type: partyType, // todo varify
+		ID:   idIncrement,
+		Type: partyType, // todo verify
 		Time: time,
 	}
 
 	registeredParties = append(registeredParties, party)
+	idIncrement++
 	return party
 }
 
