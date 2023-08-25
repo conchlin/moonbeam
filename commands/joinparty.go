@@ -14,11 +14,11 @@ import (
 *	discord syntax -> ~joinparty <party_id> <character_name> <job> <level>
  */
 
-func HandleJoinParty(discord *discordgo.Session, message *discordgo.MessageCreate) {
-	discord.ChannelMessageSend(message.ChannelID, joinParty(message))
+func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreate) {
+	session.ChannelMessageSend(message.ChannelID, joinParty(session, message))
 }
 
-func joinParty(message *discordgo.MessageCreate) string {
+func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) string {
 	var confirmation string
 
 	//verify message components
@@ -27,7 +27,8 @@ func joinParty(message *discordgo.MessageCreate) string {
 		return fmt.Sprintf("There is an error in the syntax of the party command. Joining is not possible: %v", err)
 	}
 
-	newMember := party.NewPartyMember(message.Author.Username, charName, job, level)
+	nick := getNickname(session, message.Author.ID)
+	newMember := party.NewPartyMember(nick, charName, job, level)
 	validParty := party.GetPartyByID(id)
 
 	if validParty != nil {
@@ -63,4 +64,26 @@ func splitJoinPartyString(msg string) (int, string, string, int, error) {
 	fmt.Println(levelIntVal)
 
 	return idIntVal, characterName, jobName, levelIntVal, nil
+}
+
+/*
+*
+get nickname of the user
+guildId of the server
+userId of the user who posted
+*/
+func getNickname(session *discordgo.Session, userId string) string {
+	guildId := "0" // use actual guild id i just didnt want to commit it to github lol
+	member, err := session.GuildMember(guildId, userId)
+	if err != nil {
+		fmt.Println("Error fetching member data:", err)
+		return ""
+	}
+
+	nickname := member.Nick
+	if nickname == "" {
+		nickname = member.User.Username
+	}
+
+	return nickname
 }

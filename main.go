@@ -45,14 +45,14 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	// handle commands
 	switch {
-	case message.Content == "~wanderlust", message.Content == "~help":
+	case message.Content == "$wanderlust":
 		commands.HandleHelp(session, message)
-	case message.Content == "~showparties":
+	case message.Content == "$showparties":
 		session.ChannelMessageSend(message.ChannelID, party.ShowAllParties())
 	// for commands that use additional input we need strings.Contains
-	case strings.Contains(message.Content, "~createparty"):
+	case strings.Contains(message.Content, "$createparty"):
 		commands.HandleCreateParty(session, message)
-	case strings.Contains(message.Content, "~joinparty"):
+	case strings.Contains(message.Content, "$joinparty"):
 		commands.HandleJoinParty(session, message)
 	}
 }
