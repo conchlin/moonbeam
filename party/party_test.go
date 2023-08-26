@@ -2,10 +2,11 @@ package party
 
 import (
 	"testing"
+	"time"
 )
 
 func TestAddMember(t *testing.T) {
-	p := NewParty("opq", 1234567890)
+	p := NewParty("opq", time.Now())
 	member := NewPartyMember("Discord1", "Player1", "Warrior", 120)
 
 	err := p.AddMember(member)
@@ -19,7 +20,7 @@ func TestAddMember(t *testing.T) {
 }
 
 func TestShowPartyInfo(t *testing.T) {
-	p := NewParty("opq", 1234567890)
+	p := NewParty("opq", time.Now())
 	member := NewPartyMember("Discord1", "Player1", "Warrior", 120)
 	p.AddMember(member)
 

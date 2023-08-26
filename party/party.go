@@ -3,6 +3,7 @@ package party
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 // A party is made up of up to six party members.
@@ -10,7 +11,7 @@ import (
 type Party struct {
 	ID      int
 	Type    string
-	Time    int64
+	Time    time.Time
 	Members []*PartyMember // 6 is max
 }
 
@@ -25,7 +26,7 @@ type PartyMember struct {
 }
 
 // create new party entry
-func NewParty(partyType string, time int64) *Party {
+func NewParty(partyType string, time time.Time) *Party {
 	party := &Party{
 		ID:   idIncrement,
 		Type: partyType, // todo verify
@@ -72,7 +73,7 @@ func (party *Party) ShowPartyInfo() string {
 
 	builder.WriteString(fmt.Sprintf("Party ID: %d\n", party.ID))
 	builder.WriteString(fmt.Sprintf("Party Type: %s\n", party.Type))
-	builder.WriteString(fmt.Sprintf("Party Time: %d\n", party.Time))
+	builder.WriteString(fmt.Sprintf("Party Time: %s\n", party.Time))
 
 	builder.WriteString("Party Members:\n")
 	for i, member := range party.Members {
@@ -92,4 +93,16 @@ func ShowAllParties() string {
 	}
 
 	return builder.String()
+}
+
+func ParseTimeInput(input string) (time.Time, error) {
+	input = strings.ReplaceAll(strings.ToLower(input), " ", "")
+	timeLayout := "3:04pm"
+
+	parsedTime, err := time.Parse(timeLayout, input)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return parsedTime, nil
 }

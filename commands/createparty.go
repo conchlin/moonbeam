@@ -2,8 +2,8 @@ package commands
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
+	"time"
 	"wanderlust/party"
 
 	"github.com/bwmarrin/discordgo"
@@ -35,19 +35,19 @@ func partyCreation(message *discordgo.MessageCreate) string {
 	return confirmation
 }
 
-func splitCreatePartyString(msg string) (string, int64, error) {
+func splitCreatePartyString(msg string) (string, time.Time, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 
 	// todo check for a valid party type
 	_type := strings.TrimSpace(msgSplit[1])
 
-	int64Val, err := strconv.ParseInt(strings.TrimSpace(msgSplit[2]), 10, 64)
+	timeVal, err := party.ParseTimeInput(msgSplit[2])
 	if err != nil {
-		return "", 0, fmt.Errorf("invalid party time")
+		return "", time.Time{}, fmt.Errorf("invalid party time")
 	}
 
 	fmt.Println(_type)
-	fmt.Println(int64Val)
+	fmt.Println(timeVal)
 
-	return _type, int64Val, nil
+	return _type, timeVal, nil
 }
