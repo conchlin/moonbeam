@@ -24,7 +24,7 @@ func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) str
 	//verify message components
 	id, charName, job, level, err := splitJoinPartyString(message.Content)
 	if err != nil {
-		return fmt.Sprintf("There is an error in the syntax of the party command. Joining is not possible: %v", err)
+		return fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <player_name> <job> <level>", err)
 	}
 
 	nick := getNickname(session, message.Author.ID)
@@ -36,7 +36,7 @@ func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) str
 		validParty.ShowPartyInfo()
 		confirmation = "You have successfully join the party!"
 	} else {
-		return fmt.Sprintf("There is an error in the syntax of the party command. This party id does not exist: %v", err)
+		return fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name> <job> <level>", err)
 	}
 
 	return confirmation
@@ -55,7 +55,7 @@ func splitJoinPartyString(msg string) (int, string, string, int, error) {
 
 	levelIntVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[4]))
 	if err != nil {
-		return 0, "", "", 0, fmt.Errorf("invalid job id")
+		return 0, "", "", 0, fmt.Errorf("invalid job string")
 	}
 
 	fmt.Println(idIntVal)

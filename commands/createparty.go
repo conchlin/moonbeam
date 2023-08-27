@@ -25,7 +25,7 @@ func partyCreation(message *discordgo.MessageCreate) string {
 	// verify all components of the discord syntax
 	_type, time, err := splitCreatePartyString(message.Content)
 	if err != nil {
-		return fmt.Sprintf("There is an error in the syntax of the party command. Creation is not possible: %v", err)
+		return fmt.Sprintf("Error in party creation: %v \r\n The command syntax should be $createparty <party_type> <start_time>", err)
 	}
 
 	// create new party of _type
@@ -43,7 +43,7 @@ func splitCreatePartyString(msg string) (string, time.Time, error) {
 
 	timeVal, err := party.ParseTimeInput(msgSplit[2])
 	if err != nil {
-		return "", time.Time{}, fmt.Errorf("invalid party time")
+		return "", time.Time{}, fmt.Errorf("invalid party time. Example: 5:00pm")
 	}
 
 	fmt.Println(_type)

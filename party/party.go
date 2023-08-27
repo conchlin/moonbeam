@@ -77,7 +77,8 @@ func (party *Party) ShowPartyInfo() string {
 
 	builder.WriteString("Party Members:\n")
 	for i, member := range party.Members {
-		builder.WriteString(fmt.Sprintf("Member %d: %v\n", i+1, member))
+		memberSyntax := fmt.Sprintf("%s Level %d %s", member.PlayerName, member.Level, member.Class)
+		builder.WriteString(fmt.Sprintf("	Member %d: %v\n", i+1, memberSyntax))
 	}
 
 	return builder.String()
@@ -88,8 +89,7 @@ func ShowAllParties() string {
 
 	builder.WriteString("Registered Parties:\n")
 	for _, party := range registeredParties {
-		builder.WriteString(party.ShowPartyInfo())
-		builder.WriteString("\n") // Add an empty line between parties
+		builder.WriteString("```" + party.ShowPartyInfo() + "```")
 	}
 
 	return builder.String()
