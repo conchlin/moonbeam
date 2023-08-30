@@ -14,8 +14,10 @@ func showDocumentation() string {
 	docu := `
 	## The **Wanderlust** Discord App!
 	### Command List
-	**$createparty** create a new party instance and allow others to join
-	**$joinparty** join an already created party
+	**$createparty <type> <time>** create a new party instance and allow others to join
+	**$joinparty <party_id> <character_name> <class> <level>** join an already created party
+	**$removemember <party_id> <character_name>** removes a member from an already created party
+	**$deleteparty <party_id** deletes an already existing party
 	**$showparties** list all parties currently available
 	`
 

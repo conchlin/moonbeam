@@ -90,6 +90,17 @@ func (party *Party) RemoveMember(originalPoster string, member *PartyMember) err
 	return nil
 }
 
+func DeleteParty(partyID int) bool {
+	for i, party := range registeredParties {
+		if party.ID == partyID {
+			// Remove the party from the slice
+			registeredParties = append(registeredParties[:i], registeredParties[i+1:]...)
+			return true
+		}
+	}
+	return false // Party not found
+}
+
 // Get a party by its ID. Returns nil if the party is not found.
 func GetPartyByID(partyID int) *Party {
 	for _, party := range registeredParties {
