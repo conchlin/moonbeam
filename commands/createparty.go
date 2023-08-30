@@ -29,7 +29,7 @@ func partyCreation(message *discordgo.MessageCreate) string {
 	}
 
 	// create new party of _type
-	party.NewParty(_type, time)
+	party.NewParty(message.Author.Username, _type, time)
 	confirmation = fmt.Sprintf("A new %s party has been created!", _type)
 
 	return confirmation

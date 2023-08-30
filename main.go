@@ -54,5 +54,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleCreateParty(session, message)
 	case strings.Contains(message.Content, "$joinparty"):
 		commands.HandleJoinParty(session, message)
+	case strings.Contains(message.Content, "$removemember"):
+		commands.HandleRemovePartyMember(session, message)
 	}
 }

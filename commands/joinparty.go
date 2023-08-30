@@ -27,7 +27,7 @@ func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) str
 		return fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <player_name> <job> <level>", err)
 	}
 
-	nick := getNickname(session, message.Author.ID)
+	nick := GetNickname(session, message.Author.ID)
 	newMember := party.NewPartyMember(nick, charName, job, level)
 	validParty := party.GetPartyByID(id)
 
@@ -72,7 +72,7 @@ get nickname of the user
 guildId of the server
 userId of the user who posted
 */
-func getNickname(session *discordgo.Session, userId string) string {
+func GetNickname(session *discordgo.Session, userId string) string {
 	guildId := "0" // use actual guild id i just didnt want to commit it to github lol
 	member, err := session.GuildMember(guildId, userId)
 	if err != nil {
