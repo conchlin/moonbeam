@@ -13,21 +13,14 @@ import (
 // syntax $invite <discord_name> <party_id>
 
 func HandleInviteMember(session *discordgo.Session, message *discordgo.MessageCreate) {
-	session.ChannelMessageSend(message.ChannelID, inviteMember(session, message))
-}
-
-func inviteMember(session *discordgo.Session, message *discordgo.MessageCreate) string {
-	var confirmation string
-
 	invited, partyId, err := parseInviteString(message.Content)
 	if err != nil {
-		return fmt.Sprintf("Error in inviting member: %v \r\n The command syntax should be $invite <player_name> <party_id>", err)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in inviting member: %v \r\n The command syntax should be $invite <player_name> <party_id>", err))
+		return
 	}
 
 	partyInstance := party.GetPartyByID(partyId)
-	confirmation = fmt.Sprintf("@%s You have been invited to the %s party. The id is %v", invited, partyInstance.Type, partyId)
-
-	return confirmation
+	session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("@%s You have been invited to the %s party. The id is %v", invited, partyInstance.Type, partyId))
 }
 
 func parseInviteString(msg string) (string, int, error) {

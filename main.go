@@ -38,9 +38,13 @@ func main() {
 }
 
 func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
-
 	// Ignore bot messages
 	if message.Author.ID == session.State.User.ID {
+		return
+	}
+
+	// ignore messages that do not start with $
+	if !strings.HasPrefix(message.Content, "$") {
 		return
 	}
 

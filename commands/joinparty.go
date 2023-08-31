@@ -15,16 +15,10 @@ import (
  */
 
 func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreate) {
-	session.ChannelMessageSend(message.ChannelID, joinParty(session, message))
-}
-
-func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) string {
-	var confirmation string
-
-	//verify message components
 	id, charName, job, level, err := splitJoinPartyString(message.Content)
 	if err != nil {
-		return fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <player_name> <job> <level>", err)
+		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <player_name> <job> <level>", err))
+		return
 	}
 
 	nick := GetNickname(session, message.Author.ID)
@@ -34,12 +28,15 @@ func joinParty(session *discordgo.Session, message *discordgo.MessageCreate) str
 	if validParty != nil {
 		validParty.AddMember(newMember)
 		validParty.ShowPartyInfo()
-		confirmation = "You have successfully join the party!"
+		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+			Title:       "New Member!",
+			Description: "You have successfully joined the party!",
+			Color:       0x2cdaca,
+		})
 	} else {
-		return fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name> <job> <level>", err)
+		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name> <job> <level>", err))
+		return
 	}
-
-	return confirmation
 }
 
 func splitJoinPartyString(msg string) (int, string, string, int, error) {

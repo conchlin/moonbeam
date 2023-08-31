@@ -16,24 +16,23 @@ syntax -> $deleteparty <party_id>
 */
 
 func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageCreate) {
-	session.ChannelMessageSend(message.ChannelID, partyDeletion(session, message))
-}
-
-func partyDeletion(session *discordgo.Session, message *discordgo.MessageCreate) string {
-	var confirmation string
-
 	id, err := parseDeletionString(message.Content)
 	if err != nil {
-		return fmt.Sprintf("Error in party deletion: %v \r\n The command syntax should be $deleteparty <party_id", err)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party deletion: %v \r\n The command syntax should be $deleteparty <party_id", err))
+		return
 	}
 
 	if party.DeleteParty(id) {
-		confirmation = "The party has been successfully deleted!"
+		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+			Title:       "Party Deleted",
+			Description: "The party has been successfully deleted!",
+			Color:       0x2cdaca,
+		})
 	} else {
-		return fmt.Sprintf("Error in party deletion of ID %v", id)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party deletion of ID %v", id))
+		return
 	}
 
-	return confirmation
 }
 
 func parseDeletionString(msg string) (int, error) {

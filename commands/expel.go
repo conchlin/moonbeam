@@ -12,30 +12,31 @@ import (
 // syntax for command is $removemember <party_id> <character_name>
 
 func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCreate) {
-	session.ChannelMessageSend(message.ChannelID, expelMember(session, message))
-}
-
-func expelMember(session *discordgo.Session, message *discordgo.MessageCreate) string {
-	var confirmation string
 	authorName := message.Author.Username
 
 	partyId, playerName, strErr := splitRemoveMemberString(message.Content)
 	if strErr != nil {
-		return fmt.Sprintf("Error in removing member: %v \r\n The command syntax should be $expel <player_name> <party_id>", strErr)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in removing member: %v \r\n The command syntax should be $expel <player_name> <party_id>", strErr))
+		return
 	}
 	partyInstance := party.GetPartyByID(partyId)
 	player, err := party.GetPartyMemberByName(partyInstance, playerName)
 	if err != nil {
-		return fmt.Sprintf("%s cannot be found in party", playerName)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("%s cannot be found in party", playerName))
+		return
 	}
 
 	removeErr := partyInstance.RemoveMember(GetNickname(session, authorName), player)
 	if removeErr != nil {
-		return fmt.Sprintf("error in removing member: %v", removeErr)
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("error in removing member: %v", removeErr))
+		return
 	}
 
-	confirmation = fmt.Sprintf("%s has been removed from the party", playerName)
-	return confirmation
+	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+		Title:       "Player Removed",
+		Description: player.PlayerName + " has been removed from the party.",
+		Color:       0x2cdaca,
+	})
 }
 
 func splitRemoveMemberString(msg string) (int, string, error) {
