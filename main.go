@@ -7,13 +7,14 @@ import (
 	"os/signal"
 	"strings"
 	"wanderlust/commands"
+	"wanderlust/config"
 	"wanderlust/party"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 func main() {
-	config := ParseConfig()
+	config := config.ParseConfig()
 
 	discord, err := discordgo.New("Bot " + config.Discord.SecurityToken)
 	if err != nil {

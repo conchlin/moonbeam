@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -19,7 +19,7 @@ type Config struct {
 func ParseConfig() *Config {
 	tomlFile := &Config{}
 
-	if _, err := toml.DecodeFile("config.toml", tomlFile); err != nil {
+	if _, err := toml.DecodeFile("config/config.toml", tomlFile); err != nil {
 		log.Fatal(err)
 	}
 
