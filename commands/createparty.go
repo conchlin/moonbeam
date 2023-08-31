@@ -36,14 +36,30 @@ func partyCreation(message *discordgo.MessageCreate) string {
 }
 
 func splitCreatePartyString(msg string) (string, time.Time, error) {
-	msgSplit := strings.SplitAfter(msg, " ")
+	msgLower := strings.ToLower(msg)
+	msgSplit := strings.SplitAfter(msgLower, " ")
 
-	// todo check for a valid party type
 	_type := strings.TrimSpace(msgSplit[1])
+	today := strings.TrimSpace(msgSplit[2]) == "today"
+	var timeVal time.Time
+	var err error
 
-	timeVal, err := party.ParseTimeInput(msgSplit[2])
-	if err != nil {
-		return "", time.Time{}, fmt.Errorf("invalid party time. Example: 5:00pm")
+	if today {
+		// if the player has specified the party should happen today we need to
+		// treat it differently. Let's add a dummy date so that we can correctly
+		// parse/format our date
+		timeVal, err = party.ParseTimeInput("2006-01-01 "+msgSplit[3], true)
+		if err != nil {
+			return "", time.Time{}, err
+		}
+	} else {
+		// if today is not true they have provided an actual timestamp for a party
+		// in the future. So we use that to parse our date
+		ts := msgSplit[2] + " " + msgSplit[3]
+		timeVal, err = party.ParseTimeInput(ts, false)
+		if err != nil {
+			return "", time.Time{}, err
+		}
 	}
 
 	fmt.Println(_type)

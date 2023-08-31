@@ -24,7 +24,7 @@ func TestAddMember(t *testing.T) {
 }
 
 func TestShowPartyInfo(t *testing.T) {
-	partyTime, _ := ParseTimeInput("6:00pm")
+	partyTime, _ := ParseTimeInput("6:00pm", true)
 	p := NewParty("opq", "PvE", partyTime)
 	member := NewPartyMember("Discord1", "Player1", "Warrior", 120)
 	p.AddMember(member)

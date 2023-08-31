@@ -160,14 +160,23 @@ func ShowAllParties() string {
 	return builder.String()
 }
 
-func ParseTimeInput(input string) (time.Time, error) {
-	input = strings.ReplaceAll(strings.ToLower(input), " ", "")
-	timeLayout := "3:04pm"
-
-	parsedTime, err := time.Parse(timeLayout, input)
+func ParseTimeInput(input string, today bool) (parsedTime time.Time, err error) {
+	parsedTime, err = time.Parse("2006-01-02 3:04pm", input)
 	if err != nil {
-		return time.Time{}, err
+		return parsedTime, err
+	}
+
+	if today {
+		// adjust the timestamp to represent today's date rather than a user inputted one
+		parsedTime = adjustToToday(parsedTime)
 	}
 
 	return parsedTime, nil
+}
+
+func adjustToToday(parsedTime time.Time) time.Time {
+	currentTime := time.Now()
+	currentYear, currentMonth, currentDay := currentTime.Year(), currentTime.Month(), currentTime.Day()
+
+	return time.Date(currentYear, currentMonth, currentDay, parsedTime.Hour(), parsedTime.Minute(), 0, 0, parsedTime.Location())
 }
