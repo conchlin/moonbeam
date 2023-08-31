@@ -11,17 +11,17 @@ import (
 
 // syntax for command is $removemember <party_id> <character_name>
 
-func HandleRemovePartyMember(session *discordgo.Session, message *discordgo.MessageCreate) {
-	session.ChannelMessageSend(message.ChannelID, removePartyMember(session, message))
+func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCreate) {
+	session.ChannelMessageSend(message.ChannelID, expelMember(session, message))
 }
 
-func removePartyMember(session *discordgo.Session, message *discordgo.MessageCreate) string {
+func expelMember(session *discordgo.Session, message *discordgo.MessageCreate) string {
 	var confirmation string
 	authorName := message.Author.Username
 
 	partyId, playerName, strErr := splitRemoveMemberString(message.Content)
 	if strErr != nil {
-		return fmt.Sprintf("Error in removing member: %v \r\n The command syntax should be $removemember <party_id> <player_name>", strErr)
+		return fmt.Sprintf("Error in removing member: %v \r\n The command syntax should be $expel <player_name> <party_id>", strErr)
 	}
 	partyInstance := party.GetPartyByID(partyId)
 	player, err := party.GetPartyMemberByName(partyInstance, playerName)
@@ -40,7 +40,10 @@ func removePartyMember(session *discordgo.Session, message *discordgo.MessageCre
 
 func splitRemoveMemberString(msg string) (int, string, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
-	idIntVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[1]))
+
+	playerName := strings.TrimSpace(msgSplit[1])
+
+	idIntVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[2]))
 	if err != nil {
 		return 0, "", fmt.Errorf("invalid party id")
 	}
@@ -48,8 +51,6 @@ func splitRemoveMemberString(msg string) (int, string, error) {
 	if !party.IsValidPartyID(idIntVal) {
 		return 0, "", fmt.Errorf("this party id does not exist")
 	}
-
-	playerName := strings.TrimSpace(msgSplit[2])
 
 	return idIntVal, playerName, nil
 
