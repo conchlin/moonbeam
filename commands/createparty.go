@@ -23,12 +23,13 @@ func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCre
 	}
 
 	// create new party of _type
-	party.NewParty(message.Author.Username, _type, time)
+	newParty := party.NewParty(message.Author.Username, _type, time)
 	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
 		Title:       "New Party",
 		Description: "A new " + _type + " party has been created!",
 		Color:       0x2cdaca,
 	})
+	party.CreateTimer(session, message, newParty)
 }
 
 func splitCreatePartyString(msg string) (string, time.Time, error) {
