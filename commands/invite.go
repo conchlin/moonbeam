@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -25,6 +26,10 @@ func HandleInviteMember(session *discordgo.Session, message *discordgo.MessageCr
 
 func parseInviteString(msg string) (string, int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
+
+	if len(msgSplit) != 3 {
+		return "", 0, errors.New("command parameter is missing")
+	}
 
 	playerName := strings.TrimSpace(msgSplit[1])
 

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -18,7 +19,7 @@ syntax -> $deleteparty <party_id>
 func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageCreate) {
 	id, err := parseDeletionString(message.Content)
 	if err != nil {
-		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party deletion: %v \r\n The command syntax should be $deleteparty <party_id", err))
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party deletion: %v \r\n The command syntax should be $deleteparty <party_id>", err))
 		return
 	}
 
@@ -37,6 +38,11 @@ func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageC
 
 func parseDeletionString(msg string) (int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
+
+	if len(msgSplit) != 2 {
+		return 0, errors.New("command parameter is missing")
+	}
+
 	idIntVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[1]))
 	if err != nil {
 		return 0, fmt.Errorf("invalid party id")

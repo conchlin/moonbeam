@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -18,7 +19,7 @@ import (
 func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCreate) {
 	_type, time, err := splitCreatePartyString(message.Content)
 	if err != nil {
-		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party creation: %v \r\n The command syntax should be $createparty <party_type> <start_time>", err))
+		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party creation: %v \r\n The command syntax should be $createparty <party_type> <party_date> <start_time>", err))
 		return
 	}
 
@@ -35,6 +36,10 @@ func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCre
 func splitCreatePartyString(msg string) (string, time.Time, error) {
 	msgLower := strings.ToLower(msg)
 	msgSplit := strings.SplitAfter(msgLower, " ")
+
+	if len(msgSplit) != 4 {
+		return "", time.Time{}, errors.New("command parameter is missing")
+	}
 
 	_type := strings.TrimSpace(msgSplit[1])
 	today := strings.TrimSpace(msgSplit[2]) == "today"

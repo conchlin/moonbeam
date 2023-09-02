@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -17,7 +18,7 @@ import (
 func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreate) {
 	id, charName, job, level, err := splitJoinPartyString(message.Content)
 	if err != nil {
-		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <player_name> <job> <level>", err))
+		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v \r\n The command syntax is $joinparty <party_id> <player_name> <job> <level>", err))
 		return
 	}
 
@@ -41,6 +42,10 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 
 func splitJoinPartyString(msg string) (int, string, string, int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
+
+	if len(msgSplit) != 5 {
+		return 0, "", "", 0, errors.New("command parameter is missing")
+	}
 
 	idIntVal, err := strconv.Atoi(strings.TrimSpace(msgSplit[1]))
 	if err != nil {
