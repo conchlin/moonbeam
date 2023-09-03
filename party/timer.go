@@ -8,6 +8,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// todo make this more flexible and not only for this one instance
 func CreateTimer(session *discordgo.Session, message *discordgo.MessageCreate, party *Party) {
 	currentTime := time.Now().UTC()
 	partyTime := party.Time

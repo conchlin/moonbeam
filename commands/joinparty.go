@@ -15,6 +15,7 @@ import (
 *	discord syntax -> ~joinparty <party_id> <character_name> <job> <level>
  */
 
+// command handler
 func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreate) {
 	id, charName, job, level, err := splitJoinPartyString(message.Content)
 	if err != nil {
@@ -40,6 +41,8 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 	}
 }
 
+// splitJoinPartyString parses the input message for the $joinparty command and extracts
+// the party ID, character name, job, and level.
 func splitJoinPartyString(msg string) (int, string, string, int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 
@@ -68,12 +71,7 @@ func splitJoinPartyString(msg string) (int, string, string, int, error) {
 	return idIntVal, characterName, jobName, levelIntVal, nil
 }
 
-/*
-*
-get nickname of the user
-guildId of the server
-userId of the user who posted
-*/
+// GetNickname retrieves the nickname of a user in a Discord server based on UserId and guildId
 func GetNickname(session *discordgo.Session, userId string) string {
 	guildId := "0" // use actual guild id i just didnt want to commit it to github lol
 	member, err := session.GuildMember(guildId, userId)

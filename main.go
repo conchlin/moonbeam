@@ -37,6 +37,7 @@ func main() {
 	defer discord.Close()
 }
 
+// an event handler that processes the message and handles specific commands.
 func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	// Ignore bot messages
 	if message.Author.ID == session.State.User.ID {

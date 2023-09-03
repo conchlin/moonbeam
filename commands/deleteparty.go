@@ -16,6 +16,7 @@ The only user that can use this command is the original party creator
 syntax -> $deleteparty <party_id>
 */
 
+// command handler
 func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageCreate) {
 	id, err := parseDeletionString(message.Content)
 	if err != nil {
@@ -36,6 +37,8 @@ func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageC
 
 }
 
+// parseDeletionString parses the input message for the $deleteparty command and extracts
+// the party ID to be deleted.
 func parseDeletionString(msg string) (int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 

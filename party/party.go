@@ -19,6 +19,7 @@ type Party struct {
 var registeredParties []*Party
 var idIncrement = 1
 
+// PartyMember represents a member of a Party struct
 type PartyMember struct {
 	DiscordName string
 	PlayerName  string
@@ -26,7 +27,7 @@ type PartyMember struct {
 	Level       int
 }
 
-// create new party entry
+// create new party entry and add it to registeredParties
 func NewParty(creator, partyType string, time time.Time) *Party {
 	party := &Party{
 		ID:      idIncrement,
@@ -51,7 +52,7 @@ func NewPartyMember(discordName, playerName, class string, level int) *PartyMemb
 	return member
 }
 
-// adds a new party member to the Party struct
+// adds a new party member to an existing Party
 func (party *Party) AddMember(member *PartyMember) error {
 	if len(party.Members) >= 6 { // six is max
 		return fmt.Errorf("party is already full")
@@ -60,6 +61,8 @@ func (party *Party) AddMember(member *PartyMember) error {
 	return nil
 }
 
+// removes a party member from an existing Party. Only the party creator of entry
+// creator can removed a character
 func (party *Party) RemoveMember(originalPoster string, member *PartyMember) error {
 	indexToRemove := -1
 
@@ -90,6 +93,8 @@ func (party *Party) RemoveMember(originalPoster string, member *PartyMember) err
 	return nil
 }
 
+// delete a party from the registeredParties list. Only the original creator should
+// be able to perform this action.
 func DeleteParty(partyID int) bool {
 	for i, party := range registeredParties {
 		if party.ID == partyID {
@@ -132,6 +137,7 @@ func IsValidPartyID(partyID int) bool {
 	return false // Party ID is not valid or doesn't exist
 }
 
+// returns a formatted string with information about a single party and its members.
 func (party *Party) ShowPartyInfo() string {
 	var builder strings.Builder
 
@@ -149,6 +155,7 @@ func (party *Party) ShowPartyInfo() string {
 	return builder.String()
 }
 
+// returns a formatted string with information about all registered parties.
 func ShowAllParties() string {
 	var builder strings.Builder
 
@@ -160,6 +167,7 @@ func ShowAllParties() string {
 	return builder.String()
 }
 
+// parses a time input string and adjusts it to represent today's date if requested.
 func ParseTimeInput(input string, today bool) (parsedTime time.Time, err error) {
 	parsedTime, err = time.Parse("2006-01-02 3:04pm", input)
 	if err != nil {
@@ -174,6 +182,7 @@ func ParseTimeInput(input string, today bool) (parsedTime time.Time, err error) 
 	return parsedTime, nil
 }
 
+// adjusts a timestamp to represent today's date.
 func adjustToToday(parsedTime time.Time) time.Time {
 	currentTime := time.Now()
 	currentYear, currentMonth, currentDay := currentTime.Year(), currentTime.Month(), currentTime.Day()

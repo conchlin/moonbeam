@@ -13,6 +13,7 @@ import (
 // this is just a glorified ping mechanism to alert a discord user that a party has been created
 // syntax $invite <discord_name> <party_id>
 
+// command handler
 func HandleInviteMember(session *discordgo.Session, message *discordgo.MessageCreate) {
 	invited, partyId, err := parseInviteString(message.Content)
 	if err != nil {
@@ -24,6 +25,8 @@ func HandleInviteMember(session *discordgo.Session, message *discordgo.MessageCr
 	session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("@%s You have been invited to the %s party. The id is %v", invited, partyInstance.Type, partyId))
 }
 
+// parseInviteString parses the input message for the $invite command and extracts
+// the player name and party ID to send an invitation.
 func parseInviteString(msg string) (string, int, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 

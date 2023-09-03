@@ -16,6 +16,7 @@ import (
 *	discord syntax -> $createparty <party_id> <party_type> <party_time>
  */
 
+// command handler
 func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCreate) {
 	_type, time, err := splitCreatePartyString(message.Content)
 	if err != nil {
@@ -33,6 +34,8 @@ func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCre
 	party.CreateTimer(session, message, newParty)
 }
 
+// splitCreatePartyString parses the input message for the $createparty command and extracts
+// the party type and party Time
 func splitCreatePartyString(msg string) (string, time.Time, error) {
 	msgLower := strings.ToLower(msg)
 	msgSplit := strings.SplitAfter(msgLower, " ")

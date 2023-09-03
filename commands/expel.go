@@ -10,8 +10,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// handles the expulsion of a member from a party.
 // syntax for command is $removemember <party_id> <character_name>
 
+// command handler
 func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCreate) {
 	authorName := message.Author.Username
 
@@ -40,6 +42,8 @@ func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCre
 	})
 }
 
+// splitRemoveMemberString parses the input message for the $expel command and extracts
+// the party ID and player name to be expelled.
 func splitRemoveMemberString(msg string) (int, string, error) {
 	msgSplit := strings.SplitAfter(msg, " ")
 
@@ -59,5 +63,4 @@ func splitRemoveMemberString(msg string) (int, string, error) {
 	}
 
 	return idIntVal, playerName, nil
-
 }
