@@ -9,6 +9,7 @@ import (
 // discord specific info
 type discordConfig struct {
 	SecurityToken string
+	GuildID       string
 }
 
 // overarching categories

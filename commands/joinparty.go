@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"wanderlust/party"
+	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -23,7 +24,7 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 		return
 	}
 
-	nick := GetNickname(session, message.Author.ID)
+	nick := utils.GetNickname(session, message.Author.ID)
 	newMember := party.NewPartyMember(nick, charName, job, level)
 	validParty := party.GetPartyByID(id)
 
@@ -69,21 +70,4 @@ func splitJoinPartyString(msg string) (int, string, string, int, error) {
 	fmt.Println(levelIntVal)
 
 	return idIntVal, characterName, jobName, levelIntVal, nil
-}
-
-// GetNickname retrieves the nickname of a user in a Discord server based on UserId and guildId
-func GetNickname(session *discordgo.Session, userId string) string {
-	guildId := "0" // use actual guild id i just didnt want to commit it to github lol
-	member, err := session.GuildMember(guildId, userId)
-	if err != nil {
-		fmt.Println("Error fetching member data:", err)
-		return ""
-	}
-
-	nickname := member.Nick
-	if nickname == "" {
-		nickname = member.User.Username
-	}
-
-	return nickname
 }
