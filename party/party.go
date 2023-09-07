@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"wanderlust/utils"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // A party is made up of up to six party members.
@@ -12,7 +15,8 @@ type Party struct {
 	ID      int
 	Creator string
 	Type    string
-	Time    time.Time
+	PtTime  time.Time
+	Deleted bool
 	Members []*PartyMember // 6 is max
 }
 
@@ -33,7 +37,8 @@ func NewParty(creator, partyType string, time time.Time) *Party {
 		ID:      idIncrement,
 		Creator: creator,
 		Type:    partyType, // todo verify
-		Time:    time,
+		PtTime:  time,
+		Deleted: false,
 	}
 
 	registeredParties = append(registeredParties, party)
@@ -99,6 +104,7 @@ func DeleteParty(partyID int) bool {
 	for i, party := range registeredParties {
 		if party.ID == partyID {
 			// Remove the party from the slice
+			party.Deleted = true
 			registeredParties = append(registeredParties[:i], registeredParties[i+1:]...)
 			return true
 		}
@@ -144,7 +150,7 @@ func (party *Party) ShowPartyInfo() string {
 	builder.WriteString(fmt.Sprintf("Party ID: %d\n", party.ID))
 	builder.WriteString(fmt.Sprintf("Party Creator: %s\n", party.Creator))
 	builder.WriteString(fmt.Sprintf("Party Type: %s\n", party.Type))
-	builder.WriteString(fmt.Sprintf("Party Time: %s\n", party.Time))
+	builder.WriteString(fmt.Sprintf("Party Time: %s\n", party.PtTime))
 
 	builder.WriteString("Party Members:\n")
 	for i, member := range party.Members {
@@ -188,4 +194,24 @@ func adjustToToday(parsedTime time.Time) time.Time {
 	currentYear, currentMonth, currentDay := currentTime.Year(), currentTime.Month(), currentTime.Day()
 
 	return time.Date(currentYear, currentMonth, currentDay, parsedTime.Hour(), parsedTime.Minute(), 0, 0, parsedTime.Location())
+}
+
+// send ping to all party members as a reminder of the party event
+func BroadcastPartyMessage(session *discordgo.Session, message *discordgo.MessageCreate, party *Party) {
+	var builder strings.Builder
+	for _, members := range party.Members {
+		builder.WriteString(fmt.Sprintf("@%s ", members.DiscordName))
+	}
+
+	builder.WriteString(fmt.Sprintf("The %s party is about to begin!", party.Type))
+	// only send message is party still
+	if !party.Deleted {
+		// since the party has been notified of the event we start a timer
+		// to delete the party after 30 minutes. This makes sure the party
+		// list is not just filled with long since completed events.
+		go utils.CreateTimer(30*time.Minute, func() {
+			DeleteParty(party.ID)
+		})
+		session.ChannelMessageSend(message.ChannelID, builder.String())
+	}
 }
