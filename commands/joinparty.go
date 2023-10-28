@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"wanderlust/party"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -24,8 +23,7 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 		return
 	}
 
-	nick := utils.GetNickname(session, message.Author.ID)
-	newMember := party.NewPartyMember(nick, charName, job, level)
+	newMember := party.NewPartyMember(message.Author, charName, job, level)
 	validParty := party.GetPartyByID(id)
 
 	if validParty != nil {

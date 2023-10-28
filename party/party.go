@@ -25,10 +25,10 @@ var idIncrement = 1
 
 // PartyMember represents a member of a Party struct
 type PartyMember struct {
-	DiscordName string
-	PlayerName  string
-	Class       string // player's job/class
-	Level       int
+	User       *discordgo.User
+	PlayerName string
+	Class      string // player's job/class
+	Level      int
 }
 
 // create new party entry and add it to registeredParties
@@ -47,12 +47,12 @@ func NewParty(creator, partyType string, time time.Time) *Party {
 }
 
 // create new member entry
-func NewPartyMember(discordName, playerName, class string, level int) *PartyMember {
+func NewPartyMember(discordName *discordgo.User, playerName, class string, level int) *PartyMember {
 	member := &PartyMember{
-		DiscordName: discordName,
-		PlayerName:  playerName,
-		Class:       class,
-		Level:       level,
+		User:       discordName,
+		PlayerName: playerName,
+		Class:      class,
+		Level:      level,
 	}
 	return member
 }
@@ -76,7 +76,7 @@ func (party *Party) RemoveMember(originalPoster string, member *PartyMember) err
 	}
 
 	// let's make sure random people cant just remove members
-	if originalPoster != member.DiscordName && party.Creator != member.DiscordName {
+	if originalPoster != member.User.ID && party.Creator != member.User.ID {
 		return fmt.Errorf("you are not either the party creator or member who registered this character")
 	}
 
@@ -200,11 +200,11 @@ func adjustToToday(parsedTime time.Time) time.Time {
 func BroadcastPartyMessage(session *discordgo.Session, message *discordgo.MessageCreate, party *Party) {
 	var builder strings.Builder
 	for _, members := range party.Members {
-		builder.WriteString(fmt.Sprintf("@%s ", members.DiscordName))
+		builder.WriteString(members.User.Mention())
 	}
 
 	builder.WriteString(fmt.Sprintf("The %s party is about to begin!", party.Type))
-	// only send message is party still
+	// only send message if party still exists
 	if !party.Deleted {
 		// since the party has been notified of the event we start a timer
 		// to delete the party after 30 minutes. This makes sure the party
@@ -212,6 +212,11 @@ func BroadcastPartyMessage(session *discordgo.Session, message *discordgo.Messag
 		go utils.CreateTimer(30*time.Minute, func() {
 			DeleteParty(party.ID)
 		})
-		session.ChannelMessageSend(message.ChannelID, builder.String())
+
+		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+			Title:       "Event time!",
+			Description: builder.String(),
+			Color:       0x2cdaca,
+		})
 	}
 }
