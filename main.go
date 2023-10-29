@@ -55,6 +55,9 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleHelp(session, message)
 	case message.Content == "$showparties":
 		session.ChannelMessageSend(message.ChannelID, party.ShowAllParties())
+	case message.Content == "$docu",
+		message.Content == "$documentation":
+		commands.HandleDocu(session, message)
 	// for commands that use additional input we need strings.Contains
 	case strings.Contains(message.Content, "$createparty"):
 		commands.HandleCreateParty(session, message)
