@@ -190,7 +190,7 @@ func ParseTimeInput(input string, today bool) (parsedTime time.Time, err error) 
 
 // adjusts a timestamp to represent today's date.
 func adjustToToday(parsedTime time.Time) time.Time {
-	currentTime := time.Now()
+	currentTime := time.Now().UTC()
 	currentYear, currentMonth, currentDay := currentTime.Year(), currentTime.Month(), currentTime.Day()
 
 	return time.Date(currentYear, currentMonth, currentDay, parsedTime.Hour(), parsedTime.Minute(), 0, 0, parsedTime.Location())
