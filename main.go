@@ -69,5 +69,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandlePartyDeletion(session, message)
 	case strings.Contains(message.Content, "$invite"):
 		commands.HandleInviteMember(session, message)
+	case strings.Contains(message.Content, "$random"):
+		commands.HandleListRandomizer(session, message)
 	}
 }
