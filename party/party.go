@@ -47,12 +47,12 @@ func NewParty(creator, partyType string, time time.Time) *Party {
 }
 
 // create new member entry
-func NewPartyMember(discordName *discordgo.User, playerName, class string, level int) *PartyMember {
+func NewPartyMember(discordName *discordgo.User, char utils.Player) *PartyMember {
 	member := &PartyMember{
 		User:       discordName,
-		PlayerName: playerName,
-		Class:      class,
-		Level:      level,
+		PlayerName: char.Name,
+		Class:      char.Job,
+		Level:      char.Level,
 	}
 	return member
 }

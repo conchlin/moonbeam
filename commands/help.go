@@ -23,7 +23,7 @@ func HandleHelp(discord *discordgo.Session, message *discordgo.MessageCreate) {
 			Value: "Establish a new party instance and enable others to participate.",
 		},
 		{
-			Name:  "$joinparty <party_id> <character_name> <class> <level>",
+			Name:  "$joinparty <party_id> <character_name>",
 			Value: "Become a member of a pre-existing party.",
 		},
 		{

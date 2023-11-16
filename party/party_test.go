@@ -2,6 +2,7 @@ package party
 
 import (
 	"testing"
+	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -18,8 +19,8 @@ func TestAddMember(t *testing.T) {
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")
-
-	member := NewPartyMember(user, "Player1", "Warrior", 120)
+	char := utils.Player{Name: "Player1", Job: "Warrior", Level: 120}
+	member := NewPartyMember(user, char)
 
 	err := p.AddMember(member)
 	if err != nil {
@@ -41,8 +42,8 @@ func TestRemoveMember(t *testing.T) {
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")
-
-	member := NewPartyMember(user, "Player1", "Warrior", 120)
+	char := utils.Player{Name: "Player1", Job: "Warrior", Level: 120}
+	member := NewPartyMember(user, char)
 	p.AddMember(member)
 
 	err := p.RemoveMember("opq", member)
@@ -84,8 +85,8 @@ func TestGetPartyMemberByName(t *testing.T) {
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")
-
-	member := NewPartyMember(user, "Player1", "Warrior", 120)
+	char := utils.Player{Name: "Player1", Job: "Warrior", Level: 120}
+	member := NewPartyMember(user, char)
 	p.AddMember(member)
 
 	memberName := "Player1"
