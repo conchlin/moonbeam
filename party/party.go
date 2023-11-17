@@ -154,7 +154,7 @@ func (party *Party) ShowPartyInfo() string {
 
 	builder.WriteString("Party Members:\n")
 	for i, member := range party.Members {
-		memberSyntax := fmt.Sprintf("%s (Lvl%d %s)", member.PlayerName, member.Level, member.Class)
+		memberSyntax := fmt.Sprintf("%s Level: %d Class: %s", member.PlayerName, member.Level, member.Class)
 		builder.WriteString(fmt.Sprintf("	Member %d: %v\n", i+1, memberSyntax))
 	}
 
@@ -162,15 +162,18 @@ func (party *Party) ShowPartyInfo() string {
 }
 
 // returns a formatted string with information about all registered parties.
-func ShowAllParties() string {
+func ShowAllParties(session *discordgo.Session, message *discordgo.MessageCreate) {
 	var builder strings.Builder
 
-	builder.WriteString("Registered Parties:\n")
 	for _, party := range registeredParties {
 		builder.WriteString("```" + party.ShowPartyInfo() + "```")
 	}
 
-	return builder.String()
+	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+		Title:       "Current Recruiting Party",
+		Description: builder.String(),
+		Color:       0x2cdaca,
+	})
 }
 
 // parses a time input string and adjusts it to represent today's date if requested.

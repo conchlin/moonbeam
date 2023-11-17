@@ -37,6 +37,9 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 			Title:       "New Member!",
 			Description: "You have successfully joined the party!",
 			Color:       0x2cdaca,
+			Image: &discordgo.MessageEmbedImage{
+				URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
+			},
 		})
 	} else {
 		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name>", err))

@@ -54,7 +54,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	case message.Content == "$wanderlust":
 		commands.HandleHelp(session, message)
 	case message.Content == "$showparties":
-		session.ChannelMessageSend(message.ChannelID, party.ShowAllParties())
+		party.ShowAllParties(session, message)
 	case message.Content == "$docu",
 		message.Content == "$documentation":
 		commands.HandleDocu(session, message)
