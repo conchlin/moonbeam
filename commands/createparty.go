@@ -25,9 +25,7 @@ func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCre
 		return
 	}
 
-	// create new party of _type
-	nickName := utils.GetNickname(session, message.Author.ID)
-	newParty := party.NewParty(nickName, _type, _time)
+	newParty := party.NewParty(message.Author, _type, _time)
 	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
 		Title:       "New Party",
 		Description: "A new " + _type + " party has been created!",

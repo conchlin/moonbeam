@@ -15,7 +15,7 @@ func createTestUser(username string) *discordgo.User {
 
 func TestAddMember(t *testing.T) {
 	partyTime, _ := ParseTimeInput("6:00pm", true)
-	p := NewParty("opq", "PvE", partyTime)
+	p := NewParty(createTestUser("partyLeader"), "opq", partyTime)
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")
@@ -38,7 +38,7 @@ func TestAddMember(t *testing.T) {
 
 func TestRemoveMember(t *testing.T) {
 	partyTime, _ := ParseTimeInput("6:00pm", true)
-	p := NewParty("opq", "PvE", partyTime)
+	p := NewParty(createTestUser("partyLeader"), "opq", partyTime)
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")
@@ -46,7 +46,7 @@ func TestRemoveMember(t *testing.T) {
 	member := NewPartyMember(user, char)
 	p.AddMember(member)
 
-	err := p.RemoveMember("opq", member)
+	err := p.RemoveMember(createTestUser("member"), member)
 	if err != nil {
 		t.Errorf("Error removing party member: %v", err)
 	}
@@ -57,7 +57,7 @@ func TestRemoveMember(t *testing.T) {
 
 func TestDeleteParty(t *testing.T) {
 	partyTime, _ := ParseTimeInput("6:00pm", true)
-	p := NewParty("opq", "PvE", partyTime)
+	p := NewParty(createTestUser("partyLeader"), "PvE", partyTime)
 
 	partyID := p.ID
 	if !DeleteParty(partyID) {
@@ -70,7 +70,7 @@ func TestDeleteParty(t *testing.T) {
 
 func TestGetPartyByID(t *testing.T) {
 	partyTime, _ := ParseTimeInput("6:00pm", true)
-	p := NewParty("opq", "PvE", partyTime)
+	p := NewParty(createTestUser("partyLeader"), "PvE", partyTime)
 
 	partyID := p.ID
 	p2 := GetPartyByID(partyID)
@@ -81,7 +81,7 @@ func TestGetPartyByID(t *testing.T) {
 
 func TestGetPartyMemberByName(t *testing.T) {
 	partyTime, _ := ParseTimeInput("6:00pm", true)
-	p := NewParty("opq", "PvE", partyTime)
+	p := NewParty(createTestUser("partyLeader"), "PvE", partyTime)
 
 	// Create a discordgo.User to use as input
 	user := createTestUser("Discord1")

@@ -32,10 +32,10 @@ type PartyMember struct {
 }
 
 // create new party entry and add it to registeredParties
-func NewParty(creator, partyType string, time time.Time) *Party {
+func NewParty(creator *discordgo.User, partyType string, time time.Time) *Party {
 	party := &Party{
 		ID:      idIncrement,
-		Creator: creator,
+		Creator: creator.Username,
 		Type:    partyType, // todo verify
 		PtTime:  time,
 		Deleted: false,
@@ -68,7 +68,7 @@ func (party *Party) AddMember(member *PartyMember) error {
 
 // removes a party member from an existing Party. Only the party creator of entry
 // creator can removed a character
-func (party *Party) RemoveMember(originalPoster string, member *PartyMember) error {
+func (party *Party) RemoveMember(originalPoster *discordgo.User, member *PartyMember) error {
 	indexToRemove := -1
 
 	if len(party.Members) < 2 { // at least one member needs to be remaining
@@ -76,7 +76,7 @@ func (party *Party) RemoveMember(originalPoster string, member *PartyMember) err
 	}
 
 	// let's make sure random people cant just remove members
-	if originalPoster != member.User.ID && party.Creator != member.User.ID {
+	if originalPoster.ID != member.User.ID && party.Creator != member.User.ID {
 		return fmt.Errorf("you are not either the party creator or member who registered this character")
 	}
 

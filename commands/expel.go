@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"wanderlust/party"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -16,8 +15,6 @@ import (
 
 // command handler
 func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCreate) {
-	authorName := message.Author.Username
-
 	partyId, playerName, strErr := splitRemoveMemberString(message.Content)
 	if strErr != nil {
 		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in removing member: %v \r\n The command syntax should be $expel <player_name> <party_id>", strErr))
@@ -30,7 +27,7 @@ func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCre
 		return
 	}
 
-	removeErr := partyInstance.RemoveMember(utils.GetNickname(session, authorName), player)
+	removeErr := partyInstance.RemoveMember(message.Author, player)
 	if removeErr != nil {
 		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("error in removing member: %v", removeErr))
 		return
