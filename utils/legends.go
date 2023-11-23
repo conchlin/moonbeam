@@ -12,6 +12,7 @@ type Player struct {
 	Guild  string
 	Name   string
 	Level  int
+	Exp    string
 	Gender string
 	Job    string
 	Quests int

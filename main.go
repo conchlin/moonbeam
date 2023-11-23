@@ -71,5 +71,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleInviteMember(session, message)
 	case strings.Contains(message.Content, "$random"):
 		commands.HandleListRandomizer(session, message)
+	case strings.Contains(message.Content, "$character"):
+		commands.HandleCharacterRequest(session, message)
 	}
 }
