@@ -11,7 +11,7 @@ func HandleHelp(discord *discordgo.Session, message *discordgo.MessageCreate) {
 	var description string
 	var fields []*discordgo.MessageEmbedField
 
-	title = "The Wanderlust Discord App!"
+	title = "The Moonbeam Discord App!"
 	description = "Commands List"
 	fields = []*discordgo.MessageEmbedField{
 		{

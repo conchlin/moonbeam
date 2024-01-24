@@ -2,9 +2,9 @@ package party
 
 import (
 	"fmt"
+	"moonbeam/utils"
 	"strings"
 	"time"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )

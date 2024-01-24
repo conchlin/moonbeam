@@ -2,8 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"moonbeam/utils"
 	"strings"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )

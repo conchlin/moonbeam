@@ -3,10 +3,10 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"moonbeam/party"
+	"moonbeam/utils"
 	"strconv"
 	"strings"
-	"wanderlust/party"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )

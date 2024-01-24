@@ -1,4 +1,4 @@
-module wanderlust
+module moonbeam
 
 go 1.20
 

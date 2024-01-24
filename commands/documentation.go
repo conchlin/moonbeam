@@ -8,15 +8,15 @@ func HandleDocu(session *discordgo.Session, message *discordgo.MessageCreate) {
 	var title string
 	var fields []*discordgo.MessageEmbedField
 
-	title = "Wanderlust Documentation"
+	title = "Moonbeam Documentation"
 	fields = []*discordgo.MessageEmbedField{
 		{
 			Name:  "Project Repo",
-			Value: "https://github.com/conchlin/wanderlust",
+			Value: "https://github.com/conchlin/moonbeam",
 		},
 		{
 			Name:  "App Documentation",
-			Value: "https://github.com/conchlin/wanderlust#readme",
+			Value: "https://github.com/conchlin/moonbeam#readme",
 		},
 		{
 			Name:  "Want to contribute or have a suggestion?",

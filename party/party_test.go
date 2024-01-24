@@ -1,8 +1,8 @@
 package party
 
 import (
+	"moonbeam/utils"
 	"testing"
-	"wanderlust/utils"
 
 	"github.com/bwmarrin/discordgo"
 )

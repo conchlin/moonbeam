@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"moonbeam/commands"
+	"moonbeam/config"
+	"moonbeam/party"
 	"os"
 	"os/signal"
 	"strings"
-	"wanderlust/commands"
-	"wanderlust/config"
-	"wanderlust/party"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -51,7 +51,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	// handle commands
 	switch {
-	case message.Content == "$wanderlust":
+	case message.Content == "$moonbeam":
 		commands.HandleHelp(session, message)
 	case message.Content == "$showparties":
 		party.ShowAllParties(session, message)
