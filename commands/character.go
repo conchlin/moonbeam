@@ -19,6 +19,7 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 	builder.WriteString(fmt.Sprintf("Exp: %v\n", playerInfo.Exp))
 	builder.WriteString(fmt.Sprintf("Fame: %v\n", playerInfo.Fame))
 	builder.WriteString(fmt.Sprintf("Cards: %v\n", playerInfo.Cards))
+	builder.WriteString(fmt.Sprintf("Quests: %v\n", playerInfo.Quests))
 	builder.WriteString(fmt.Sprintf("Job: %s\n", playerInfo.Job))
 	builder.WriteString(fmt.Sprintf("Guild: %s\n", playerInfo.Guild))
 
