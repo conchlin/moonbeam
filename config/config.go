@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"log"
+	"moonbeam/utils"
 	"os"
 )
 
@@ -50,4 +51,47 @@ func ParseConfig() *Config {
 	}
 
 	return config
+}
+
+func saveConfig(config *Config) error {
+	jsonFile, err := os.Create("config/config.json")
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+
+	jsonEncoder := json.NewEncoder(jsonFile)
+	jsonEncoder.SetIndent("", "  ")
+
+	if err := jsonEncoder.Encode(config); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func AddMember(user utils.Player) error {
+	config := ParseConfig()
+	newMember := MemberInfo{
+		Guild:  user.Guild,
+		Name:   user.Name,
+		Level:  user.Level,
+		Exp:    user.Exp,
+		Gender: user.Gender,
+		Job:    user.Job,
+		Quests: user.Quests,
+		Cards:  user.Cards,
+		Donor:  user.Donor,
+		Fame:   user.Fame,
+	}
+
+	// Append new member to existing member slice
+	config.Guild.Members = append(config.Guild.Members, newMember)
+
+	// Save the updated configuration to the JSON file
+	if err := saveConfig(config); err != nil {
+		return err
+	}
+
+	return nil
 }

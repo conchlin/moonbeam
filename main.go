@@ -73,5 +73,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleListRandomizer(session, message)
 	case strings.Contains(message.Content, "$character"):
 		commands.HandleCharacterRequest(session, message)
+	case strings.Contains(message.Content, "$addmember"):
+		commands.HandleNewGuildMember(session, message)
 	}
 }
