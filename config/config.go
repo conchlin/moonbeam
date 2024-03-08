@@ -12,19 +12,16 @@ type MemberInfo struct {
 	Guild  string `json:"guild"`
 	Name   string `json:"name"`
 	Level  int    `json:"level"`
-	Exp    string `json:"exp"`
-	Gender string `json:"gender"`
 	Job    string `json:"job"`
 	Quests int    `json:"quests"`
 	Cards  int    `json:"cards"`
-	Donor  bool   `json:"donor"`
 	Fame   int    `json:"fame"`
 }
 
 // overarching categories
 type Config struct {
 	Discord discordConfig `json:"discord"`
-	Guild   guildConfig   `json:"guild"`
+	Guild   GuildConfig   `json:"guild"`
 }
 
 // discord specific info
@@ -33,7 +30,7 @@ type discordConfig struct {
 }
 
 // guild member specific info
-type guildConfig struct {
+type GuildConfig struct {
 	Members []MemberInfo `json:"members"`
 }
 
@@ -76,12 +73,9 @@ func AddMember(user utils.Player) error {
 		Guild:  user.Guild,
 		Name:   user.Name,
 		Level:  user.Level,
-		Exp:    user.Exp,
-		Gender: user.Gender,
 		Job:    user.Job,
 		Quests: user.Quests,
 		Cards:  user.Cards,
-		Donor:  user.Donor,
 		Fame:   user.Fame,
 	}
 
@@ -94,4 +88,16 @@ func AddMember(user utils.Player) error {
 	}
 
 	return nil
+}
+
+func ConvertJsonToPlayer(member MemberInfo) utils.Player {
+	return utils.Player{
+		Guild:  member.Guild,
+		Name:   member.Name,
+		Level:  member.Level,
+		Job:    member.Job,
+		Quests: member.Quests,
+		Cards:  member.Cards,
+		Fame:   member.Fame,
+	}
 }

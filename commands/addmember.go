@@ -13,18 +13,24 @@ import (
 func HandleNewGuildMember(session *discordgo.Session, message *discordgo.MessageCreate) {
 	msgSplit := strings.SplitAfter(message.Content, " ")
 
-	// verify if new member is a valid character
-	playerInfo, _ := utils.ParseCharacterJSON(msgSplit[1])
-	err := config.AddMember(playerInfo)
-	if err != nil {
-		log.Fatal(err)
+	perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
+	if e != nil {
+		fmt.Println(e.Error())
 	}
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       playerInfo.Name,
-		Description: "Successfully added to the guild list",
-		Color:       0x2cdaca,
-		Image: &discordgo.MessageEmbedImage{
-			URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
-		},
-	})
+	if perms&discordgo.PermissionManageMessages == discordgo.PermissionManageMessages {
+		// verify if new member is a valid character
+		playerInfo, _ := utils.ParseCharacterJSON(msgSplit[1])
+		err := config.AddMember(playerInfo)
+		if err != nil {
+			log.Fatal(err)
+		}
+		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+			Title:       playerInfo.Name,
+			Description: "Successfully added to the guild list",
+			Color:       0x2cdaca,
+			Image: &discordgo.MessageEmbedImage{
+				URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
+			},
+		})
+	}
 }

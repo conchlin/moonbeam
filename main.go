@@ -5,6 +5,7 @@ import (
 	"log"
 	"moonbeam/commands"
 	"moonbeam/config"
+	"moonbeam/guild"
 	"moonbeam/party"
 	"os"
 	"os/signal"
@@ -23,6 +24,8 @@ func main() {
 
 	// Add event handler
 	discord.AddHandler(newMessage)
+	guild.LoadCurrentMemberData()
+	guild.StartMemberUpdateTask()
 
 	// Open websocket
 	discord.Open()
