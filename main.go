@@ -24,7 +24,6 @@ func main() {
 
 	// Add event handler
 	discord.AddHandler(newMessage)
-	guild.LoadCurrentMemberData()
 	guild.StartMemberUpdateTask()
 
 	// Open websocket

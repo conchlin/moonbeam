@@ -101,3 +101,30 @@ func ConvertJsonToPlayer(member MemberInfo) utils.Player {
 		Fame:   member.Fame,
 	}
 }
+
+func RefreshMemberList(data []utils.Player) error {
+	config := ParseConfig()
+	//clear before adding new list
+	config.Guild.Members = nil
+	for _, entry := range data {
+		updatedMember := MemberInfo{
+			Guild:  entry.Guild,
+			Name:   entry.Name,
+			Level:  entry.Level,
+			Job:    entry.Job,
+			Quests: entry.Quests,
+			Cards:  entry.Cards,
+			Fame:   entry.Fame,
+		}
+
+		// Append new member to existing member slice
+		config.Guild.Members = append(config.Guild.Members, updatedMember)
+	}
+
+	// Save the updated configuration to the JSON file
+	if err := saveConfig(config); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -1,6 +1,11 @@
 package commands
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 var feedChannel string
 var s *discordgo.Session
@@ -22,10 +27,15 @@ func HandleStartFeed(session *discordgo.Session, message *discordgo.MessageCreat
 func CreateFeedPosts(events []string) {
 	if active {
 		for _, event := range events {
+			// grab the char name which is the first word of event
+			split := strings.SplitAfter(event, " ")
 			s.ChannelMessageSendEmbed(feedChannel, &discordgo.MessageEmbed{
 				Title:       "Guild Update",
 				Description: event,
 				Color:       0x2cdaca,
+				Image: &discordgo.MessageEmbedImage{
+					URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0]),
+				},
 			})
 		}
 	}

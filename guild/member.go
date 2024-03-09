@@ -15,7 +15,7 @@ var ticker *time.Ticker
 
 // Load all JSON member entries into newMemberInfo variable
 // we also load all member names into validMemberName variable
-func LoadCurrentMemberData() ([]utils.Player, error) {
+func loadCurrentMemberData() ([]utils.Player, error) {
 	cfg := config.ParseConfig()
 
 	for _, member := range cfg.Guild.Members {
@@ -40,30 +40,40 @@ func loadNewMemberData() {
 }
 
 func StartMemberUpdateTask() {
-	ticker = time.NewTicker(1 * time.Minute)
+	ticker = time.NewTicker(15 * time.Minute)
 
-	fmt.Println("new update timer has started")
 	go func() {
 		for range ticker.C {
+			loadCurrentMemberData()
 			loadNewMemberData()
-			compareMemberData()
-			// replace currentMemberData with newMemberData
-			// write newMemberData to json
+			diff := compareMemberData()
+			commands.CreateFeedPosts(diff)
+			config.RefreshMemberList(newMemberData)
+			// clear data for next iteration
+			currentMemberData = nil
+			newMemberData = nil
+			validMemberNames = nil
 		}
 	}()
 }
 
-func compareMemberData() {
+func compareMemberData() []string {
 	var diffs []string = nil
 	for _, currentData := range currentMemberData {
 		for _, newData := range newMemberData {
 			if currentData.Name == newData.Name {
-				if currentData.Cards != newData.Cards {
-					diffs = append(diffs, fmt.Sprintf("%s has reached %v cards!", currentData.Name, newData.Cards))
-				}
-				if currentData.Fame != newData.Fame {
-					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, newData.Fame))
-				}
+				// card notifications should happen every 50 cards
+				/*if currentData.Cards != newData.Cards && newData.Cards-currentData.Cards >= 50 {
+					remainder := newData.Cards % 50
+					roundedNumber := newData.Cards - remainder
+					diffs = append(diffs, fmt.Sprintf("%s has reached %v cards!", currentData.Name, roundedNumber))
+				}*/
+				// fame notifications should happen every 25 fame
+				/*if currentData.Fame != newData.Fame && newData.Fame-currentData.Fame >= 25 {
+					remainder := newData.Fame % 25
+					roundedNumber := newData.Fame - remainder
+					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, roundedNumber))
+				}*/
 				if currentData.Guild != newData.Guild {
 					diffs = append(diffs, fmt.Sprintf("%s has left the guild!", currentData.Name))
 				}
@@ -72,13 +82,16 @@ func compareMemberData() {
 				}
 				if currentData.Level != newData.Level {
 					diffs = append(diffs, fmt.Sprintf("%s has reached level %v!", currentData.Name, newData.Level))
+
 				}
-				if currentData.Quests != newData.Quests {
-					diffs = append(diffs, fmt.Sprintf("%s has completed %v quests!", currentData.Name, newData.Quests))
-				}
+				/*if currentData.Quests != newData.Quests && newData.Fame-currentData.Fame >= 25 {
+					remainder := newData.Quests % 25
+					roundedNumber := newData.Quests - remainder
+					diffs = append(diffs, fmt.Sprintf("%s has completed %v quests!", currentData.Name, roundedNumber))
+				}*/
 			}
 		}
 	}
 
-	commands.CreateFeedPosts(diffs)
+	return diffs
 }
