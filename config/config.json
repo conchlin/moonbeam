@@ -1,0 +1,33 @@
+{
+  "discord": {
+    "securityToken": ""
+  },
+  "guild": {
+    "members": [
+      {
+        "guild": "moonbeam",
+        "name": "Purdy",
+        "level": 87,
+        "exp": "6.46%",
+        "gender": "male",
+        "job": "Outlaw",
+        "quests": 468,
+        "cards": 863,
+        "donor": false,
+        "fame": 88
+      },
+      {
+        "guild": "moonbeam",
+        "name": "Muggsy",
+        "level": 48,
+        "exp": "29.98%",
+        "gender": "male",
+        "job": "Crossbowman",
+        "quests": 230,
+        "cards": 91,
+        "donor": false,
+        "fame": 24
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ import (
 	"log"
 	"moonbeam/commands"
 	"moonbeam/config"
+	"moonbeam/guild"
 	"moonbeam/party"
 	"os"
 	"os/signal"
@@ -23,6 +24,7 @@ func main() {
 
 	// Add event handler
 	discord.AddHandler(newMessage)
+	guild.StartMemberUpdateTask()
 
 	// Open websocket
 	discord.Open()
@@ -58,6 +60,8 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	case message.Content == "$docu",
 		message.Content == "$documentation":
 		commands.HandleDocu(session, message)
+	case message.Content == "$startguildfeed":
+		commands.HandleStartFeed(session, message)
 	// for commands that use additional input we need strings.Contains
 	case strings.Contains(message.Content, "$createparty"):
 		commands.HandleCreateParty(session, message)
@@ -73,5 +77,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleListRandomizer(session, message)
 	case strings.Contains(message.Content, "$character"):
 		commands.HandleCharacterRequest(session, message)
+	case strings.Contains(message.Content, "$addmember"):
+		commands.HandleNewGuildMember(session, message)
 	}
 }
