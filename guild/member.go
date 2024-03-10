@@ -2,9 +2,11 @@ package guild
 
 import (
 	"fmt"
+	"log"
 	"moonbeam/commands"
 	"moonbeam/config"
 	"moonbeam/utils"
+	"sync"
 	"time"
 )
 
@@ -12,10 +14,11 @@ var currentMemberData []utils.Player
 var newMemberData []utils.Player
 var validMemberNames []string
 var ticker *time.Ticker
+var mu sync.Mutex
 
 // Load all JSON member entries into newMemberInfo variable
 // we also load all member names into validMemberName variable
-func loadCurrentMemberData() ([]utils.Player, error) {
+func loadCurrentMemberData() error {
 	cfg := config.ParseConfig()
 
 	for _, member := range cfg.Guild.Members {
@@ -24,7 +27,7 @@ func loadCurrentMemberData() ([]utils.Player, error) {
 		validMemberNames = append(validMemberNames, player.Name)
 	}
 
-	return currentMemberData, nil
+	return nil
 }
 
 // generate new player data for all names included in validMemberNames
@@ -32,7 +35,8 @@ func loadNewMemberData() {
 	for _, name := range validMemberNames {
 		player, err := utils.ParseCharacterJSON(name)
 		if err != nil {
-			return
+			fmt.Printf("Error parsing character JSON for %s: %s\n", name, err)
+			continue
 		}
 
 		newMemberData = append(newMemberData, player)
@@ -44,15 +48,22 @@ func StartMemberUpdateTask() {
 
 	go func() {
 		for range ticker.C {
-			loadCurrentMemberData()
+			err := loadCurrentMemberData()
+			if err != nil {
+				log.Printf("error in loading current member data %s", err)
+				continue
+			}
 			loadNewMemberData()
 			diff := compareMemberData()
+
+			mu.Lock()
 			commands.CreateFeedPosts(diff)
 			config.RefreshMemberList(newMemberData)
 			// clear data for next iteration
 			currentMemberData = nil
 			newMemberData = nil
 			validMemberNames = nil
+			mu.Unlock()
 		}
 	}()
 }
@@ -93,5 +104,6 @@ func compareMemberData() []string {
 		}
 	}
 
+	fmt.Printf("Differences to be posted %s", diffs)
 	return diffs
 }

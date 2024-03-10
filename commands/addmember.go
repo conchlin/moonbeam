@@ -19,11 +19,12 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 	}
 	if perms&discordgo.PermissionManageMessages == discordgo.PermissionManageMessages {
 		// verify if new member is a valid character
-		playerInfo, _ := utils.ParseCharacterJSON(msgSplit[1])
-		err := config.AddMember(playerInfo)
+		playerInfo, err := utils.ParseCharacterJSON(msgSplit[1])
 		if err != nil {
-			log.Fatal(err)
+			log.Println("Failed to parse character. This character does not exist")
+			return
 		}
+		config.AddMember(playerInfo)
 		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
 			Title:       playerInfo.Name,
 			Description: "Successfully added to the guild list",
