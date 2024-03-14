@@ -79,5 +79,7 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleCharacterRequest(session, message)
 	case strings.Contains(message.Content, "$addmember"):
 		commands.HandleNewGuildMember(session, message)
+	case strings.Contains(message.Content, "$removemember"):
+		commands.HandleMemberRemoval(session, message)
 	}
 }
