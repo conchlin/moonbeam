@@ -87,6 +87,8 @@ func compareMemberData() []string {
 				}*/
 				if currentData.Guild != newData.Guild {
 					diffs = append(diffs, fmt.Sprintf("%s has left the guild!", currentData.Name))
+					// remove member from list so we no longer get updates
+					config.RemoveMember(currentData.Name)
 				}
 				if currentData.Job != newData.Job {
 					diffs = append(diffs, fmt.Sprintf("%s has advanced to %s!", currentData.Name, newData.Job))
