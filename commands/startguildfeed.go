@@ -34,7 +34,9 @@ func CreateFeedPosts(events []string) {
 				Description: event,
 				Color:       0x2cdaca,
 				Image: &discordgo.MessageEmbedImage{
-					URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0]),
+					URL:    fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0]),
+					Width:  70,
+					Height: 78,
 				},
 			})
 		}

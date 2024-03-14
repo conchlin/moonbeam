@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"moonbeam/utils"
 	"os"
@@ -120,6 +121,32 @@ func RefreshMemberList(data []utils.Player) error {
 		// Append new member to existing member slice
 		config.Guild.Members = append(config.Guild.Members, updatedMember)
 	}
+
+	// Save the updated configuration to the JSON file
+	if err := saveConfig(config); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RemoveMember(memberName string) error {
+	config := ParseConfig()
+
+	index := -1
+	for i, member := range config.Guild.Members {
+		if member.Name == memberName {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return fmt.Errorf("member %s not found", memberName)
+	}
+
+	// Remove the member from the slice
+	config.Guild.Members = append(config.Guild.Members[:index], config.Guild.Members[index+1:]...)
 
 	// Save the updated configuration to the JSON file
 	if err := saveConfig(config); err != nil {

@@ -30,7 +30,9 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 			Description: "Successfully added to the guild list",
 			Color:       0x2cdaca,
 			Image: &discordgo.MessageEmbedImage{
-				URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
+				URL:    fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
+				Width:  70,
+				Height: 78,
 			},
 		})
 	}
