@@ -14,6 +14,7 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 	msgSplit := strings.SplitAfter(msgLower, " ")
 
 	playerInfo, _ := utils.ParseCharacterJSON(msgSplit[1])
+	imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
 
 	builder.WriteString(fmt.Sprintf("Level: %d\n", playerInfo.Level))
 	builder.WriteString(fmt.Sprintf("Exp: %v\n", playerInfo.Exp))
@@ -23,14 +24,17 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 	builder.WriteString(fmt.Sprintf("Job: %s\n", playerInfo.Job))
 	builder.WriteString(fmt.Sprintf("Guild: %s\n", playerInfo.Guild))
 
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       playerInfo.Name,
-		Description: builder.String(),
-		Color:       0x2cdaca,
-		Image: &discordgo.MessageEmbedImage{
-			URL:    fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
-			Width:  70,
-			Height: 78,
+	imgBuf, _ := utils.ParseChracterImage(imgUrl)
+
+	session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
+		Embed: &discordgo.MessageEmbed{
+			Title:       playerInfo.Name,
+			Description: builder.String(),
+			Color:       0x2cdaca,
+		},
+		File: &discordgo.File{
+			Name:   "output.png",
+			Reader: imgBuf,
 		},
 	})
 }

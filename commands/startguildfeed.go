@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"moonbeam/utils"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -29,14 +30,18 @@ func CreateFeedPosts(events []string) {
 		for _, event := range events {
 			// grab the char name which is the first word of event
 			split := strings.SplitAfter(event, " ")
-			s.ChannelMessageSendEmbed(feedChannel, &discordgo.MessageEmbed{
-				Title:       "Guild Update",
-				Description: event,
-				Color:       0x2cdaca,
-				Image: &discordgo.MessageEmbedImage{
-					URL:    fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0]),
-					Width:  70,
-					Height: 78,
+			charUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0])
+			imgBuf, _ := utils.ParseChracterImage(charUrl)
+
+			s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
+				Embed: &discordgo.MessageEmbed{
+					Title:       "Guild Update",
+					Description: event,
+					Color:       0x2cdaca,
+				},
+				File: &discordgo.File{
+					Name:   "output.png",
+					Reader: imgBuf,
 				},
 			})
 		}
