@@ -25,14 +25,18 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 			return
 		}
 		config.AddMember(playerInfo)
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       playerInfo.Name,
-			Description: "Successfully added to the guild list",
-			Color:       0x2cdaca,
-			Image: &discordgo.MessageEmbedImage{
-				URL:    fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
-				Width:  70,
-				Height: 78,
+		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
+		imgBuf, _ := utils.ParseChracterImage(imgUrl)
+
+		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
+			Embed: &discordgo.MessageEmbed{
+				Title:       playerInfo.Name,
+				Description: "Successfully added to the guild list",
+				Color:       0x2cdaca,
+			},
+			File: &discordgo.File{
+				Name:   "output.png",
+				Reader: imgBuf,
 			},
 		})
 	}

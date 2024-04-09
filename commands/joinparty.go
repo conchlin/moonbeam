@@ -31,14 +31,20 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 	validParty := party.GetPartyByID(id)
 
 	if validParty != nil {
+		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
+		imgBuf, _ := utils.ParseChracterImage(imgUrl)
 		validParty.AddMember(newMember)
 		validParty.ShowPartyInfo()
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "New Member!",
-			Description: "You have successfully joined the party!",
-			Color:       0x2cdaca,
-			Image: &discordgo.MessageEmbedImage{
-				URL: fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name),
+
+		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
+			Embed: &discordgo.MessageEmbed{
+				Title:       "New Member!",
+				Description: "You have successfully joined the party!",
+				Color:       0x2cdaca,
+			},
+			File: &discordgo.File{
+				Name:   "output.png",
+				Reader: imgBuf,
 			},
 		})
 	} else {
