@@ -2,6 +2,12 @@
 
 Moonbeam is a small Discord app written in Go, primarily used to organize parties within gaming communities.
 
+## Guild Event Feed
+
+The primary function of the Moonbeam app is to transform a Discord server into a live feed of Guild events. We achieve this by making timed API calls and generating posts based on character changes. This feature provides a convenient way to stay updated on in-game events directly from Discord!
+
+![Moonbeam feed](https://i.imgur.com/xSrhlPz.png)
+
 ## Party Organization
 
 Moonbeam utilizes a command-line interface to organize gaming events. The available commands are as follows:
@@ -43,4 +49,4 @@ $random 1 2 3
 $character CharacterName
 ```
 
-![character command](https://i.imgur.com/1pucYLF.png)
+![character command](https://i.imgur.com/KoQXrsS.png)
