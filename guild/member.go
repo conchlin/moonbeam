@@ -31,16 +31,18 @@ func loadCurrentMemberData() error {
 }
 
 // generate new player data for all names included in validMemberNames
-func loadNewMemberData() {
+func loadNewMemberData() error {
 	for _, name := range validMemberNames {
 		player, err := utils.ParseCharacterJSON(name)
 		if err != nil {
 			fmt.Printf("Error parsing character JSON for %s: %s\n", name, err)
-			continue
+			return err
 		}
 
 		newMemberData = append(newMemberData, player)
 	}
+
+	return nil
 }
 
 func StartMemberUpdateTask() {
@@ -51,18 +53,25 @@ func StartMemberUpdateTask() {
 			err := loadCurrentMemberData()
 			if err != nil {
 				log.Printf("error in loading current member data %s", err)
+				clearData()
 				continue
 			}
-			loadNewMemberData()
-			diff := compareMemberData()
 
+			err1 := loadNewMemberData()
+			if err1 != nil {
+				log.Printf("error in generating new member data %s", err)
+				clearData()
+				continue
+			}
+
+			diff := compareMemberData()
 			mu.Lock()
-			commands.CreateFeedPosts(diff)
-			config.RefreshMemberList(newMemberData)
-			// clear data for next iteration
-			currentMemberData = nil
-			newMemberData = nil
-			validMemberNames = nil
+			if len(diff) != 0 {
+				commands.CreateFeedPosts(diff)
+				config.RefreshMemberList(newMemberData)
+			}
+
+			clearData()
 			mu.Unlock()
 		}
 	}()
@@ -106,6 +115,14 @@ func compareMemberData() []string {
 		}
 	}
 
-	fmt.Printf("Differences to be posted %s", diffs)
+	if len(diffs) != 0 {
+		fmt.Printf("Differences to be posted %s", diffs)
+	}
 	return diffs
+}
+
+func clearData() {
+	currentMemberData = nil
+	newMemberData = nil
+	validMemberNames = nil
 }
