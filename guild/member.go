@@ -91,8 +91,8 @@ func compareMemberData() []string {
 					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, (newData.Fame/50)*50))
 				}
 				if currentData.Guild != newData.Guild {
-					diffs = append(diffs, fmt.Sprintf("%s has left the guild!", currentData.Name))
-					// remove member from list so we no longer get updates
+					// log to console instead of discord
+					fmt.Printf("%s has left the guild", currentData.Name)
 					config.RemoveMember(currentData.Name)
 				}
 				if currentData.Job != newData.Job {
