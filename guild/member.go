@@ -82,18 +82,14 @@ func compareMemberData() []string {
 	for _, currentData := range currentMemberData {
 		for _, newData := range newMemberData {
 			if currentData.Name == newData.Name {
-				// card notifications should happen every 50 cards
-				/*if currentData.Cards != newData.Cards && newData.Cards-currentData.Cards >= 50 {
-					remainder := newData.Cards % 50
-					roundedNumber := newData.Cards - remainder
-					diffs = append(diffs, fmt.Sprintf("%s has reached %v cards!", currentData.Name, roundedNumber))
-				}*/
-				// fame notifications should happen every 25 fame
-				/*if currentData.Fame != newData.Fame && newData.Fame-currentData.Fame >= 25 {
-					remainder := newData.Fame % 25
-					roundedNumber := newData.Fame - remainder
-					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, roundedNumber))
-				}*/
+				if (currentData.Cards / 50) < (newData.Cards / 50) {
+					// display in multiples of 50
+					diffs = append(diffs, fmt.Sprintf("%s has collected %v cards!", currentData.Name, (newData.Cards/50)*50))
+				}
+				if (currentData.Fame / 50) < (newData.Fame / 50) {
+					// display in multiples of 50
+					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, (newData.Fame/50)*50))
+				}
 				if currentData.Guild != newData.Guild {
 					diffs = append(diffs, fmt.Sprintf("%s has left the guild!", currentData.Name))
 					// remove member from list so we no longer get updates
@@ -106,11 +102,10 @@ func compareMemberData() []string {
 					diffs = append(diffs, fmt.Sprintf("%s has reached level %v!", currentData.Name, newData.Level))
 
 				}
-				/*if currentData.Quests != newData.Quests && newData.Fame-currentData.Fame >= 25 {
-					remainder := newData.Quests % 25
-					roundedNumber := newData.Quests - remainder
-					diffs = append(diffs, fmt.Sprintf("%s has completed %v quests!", currentData.Name, roundedNumber))
-				}*/
+				if (currentData.Quests / 50) < (newData.Quests / 50) {
+					// display in multiples of 50
+					diffs = append(diffs, fmt.Sprintf("%s has completed %v quests!", currentData.Name, (newData.Quests/50)*50))
+				}
 			}
 		}
 	}
