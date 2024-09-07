@@ -18,6 +18,8 @@ func HandleGuildList(session *discordgo.Session, message *discordgo.MessageCreat
 
 	c := collate.New(language.English, collate.IgnoreCase)
 	c.SortStrings(currentMemberList)
+
+	formattedList.WriteString(fmt.Sprintf("Total Members: %v\n\n", len(currentMemberList)))
 	for _, char := range currentMemberList {
 		formattedList.WriteString(fmt.Sprintf(char + "\r\n"))
 	}
