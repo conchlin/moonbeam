@@ -6,6 +6,7 @@ import (
 	"log"
 	"moonbeam/utils"
 	"os"
+	"time"
 )
 
 // player specific info
@@ -19,10 +20,16 @@ type MemberInfo struct {
 	Fame   int    `json:"fame"`
 }
 
+type LastUpdate struct {
+	Name     string    `json:"name"`
+	UpdateAt time.Time `json:"updated_at"`
+}
+
 // overarching categories
 type Config struct {
-	Discord discordConfig `json:"discord"`
-	Guild   GuildConfig   `json:"guild"`
+	Discord  discordConfig  `json:"discord"`
+	Guild    GuildConfig    `json:"guild"`
+	Activity ActivityConfig `json:"last_activity"`
 }
 
 // discord specific info
@@ -33,6 +40,10 @@ type discordConfig struct {
 // guild member specific info
 type GuildConfig struct {
 	Members []MemberInfo `json:"members"`
+}
+
+type ActivityConfig struct {
+	Updated []LastUpdate `json:"updates"`
 }
 
 func ParseConfig() *Config {
@@ -79,9 +90,14 @@ func AddMember(user utils.Player) error {
 		Cards:  user.Cards,
 		Fame:   user.Fame,
 	}
+	timeNow := LastUpdate{
+		Name:     user.Name,
+		UpdateAt: time.Now(),
+	}
 
 	// Append new member to existing member slice
 	config.Guild.Members = append(config.Guild.Members, newMember)
+	config.Activity.Updated = append(config.Activity.Updated, timeNow)
 
 	// Save the updated configuration to the JSON file
 	if err := saveConfig(config); err != nil {

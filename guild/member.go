@@ -64,10 +64,11 @@ func StartMemberUpdateTask() {
 				continue
 			}
 
-			diff := compareMemberData()
+			diff, updatedPlayers := compareMemberData()
 			mu.Lock()
 			if len(diff) != 0 {
 				commands.CreateFeedPosts(diff)
+				FlagForUpdate(updatedPlayers)
 				config.RefreshMemberList(newMemberData)
 			}
 
@@ -77,18 +78,21 @@ func StartMemberUpdateTask() {
 	}()
 }
 
-func compareMemberData() []string {
+func compareMemberData() ([]string, []string) {
 	var diffs []string = nil
+	var updatedPlayer []string = nil
 	for _, currentData := range currentMemberData {
 		for _, newData := range newMemberData {
 			if currentData.Name == newData.Name {
 				if (currentData.Cards / 50) < (newData.Cards / 50) {
 					// display in multiples of 50
 					diffs = append(diffs, fmt.Sprintf("%s has collected %v cards!", currentData.Name, (newData.Cards/50)*50))
+					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
 				if (currentData.Fame / 50) < (newData.Fame / 50) {
 					// display in multiples of 50
 					diffs = append(diffs, fmt.Sprintf("%s has reached %v fame!", currentData.Name, (newData.Fame/50)*50))
+					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
 				if currentData.Guild != newData.Guild {
 					// log to console instead of discord
@@ -97,14 +101,16 @@ func compareMemberData() []string {
 				}
 				if currentData.Job != newData.Job {
 					diffs = append(diffs, fmt.Sprintf("%s has advanced to %s!", currentData.Name, newData.Job))
+					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
 				if currentData.Level != newData.Level {
 					diffs = append(diffs, fmt.Sprintf("%s has reached level %v!", currentData.Name, newData.Level))
-
+					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
 				if (currentData.Quests / 50) < (newData.Quests / 50) {
 					// display in multiples of 50
 					diffs = append(diffs, fmt.Sprintf("%s has completed %v quests!", currentData.Name, (newData.Quests/50)*50))
+					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
 			}
 		}
@@ -113,7 +119,7 @@ func compareMemberData() []string {
 	if len(diffs) != 0 {
 		fmt.Printf("Differences to be posted %s", diffs)
 	}
-	return diffs
+	return diffs, updatedPlayer
 }
 
 func clearData() {
