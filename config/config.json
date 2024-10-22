@@ -7,26 +7,46 @@
       {
         "guild": "moonbeam",
         "name": "Purdy",
-        "level": 87,
-        "exp": "6.46%",
-        "gender": "male",
+        "level": 97,
         "job": "Outlaw",
-        "quests": 468,
-        "cards": 863,
-        "donor": false,
-        "fame": 88
+        "quests": 475,
+        "cards": 886,
+        "fame": 90
       },
       {
         "guild": "moonbeam",
-        "name": "Muggsy",
-        "level": 48,
-        "exp": "29.98%",
-        "gender": "male",
-        "job": "Crossbowman",
-        "quests": 230,
-        "cards": 91,
-        "donor": false,
-        "fame": 24
+        "name": "Quenya",
+        "level": 106,
+        "job": "Priest",
+        "quests": 211,
+        "cards": 250,
+        "fame": 31
+      },
+      {
+        "guild": "LeFay",
+        "name": "Chomby",
+        "level": 52,
+        "job": "Bandit",
+        "quests": 172,
+        "cards": 59,
+        "fame": 12
+      },
+      {
+        "guild": "moonbeam",
+        "name": "Zaelius",
+        "level": 101,
+        "job": "Mage (Ice/Lightning)",
+        "quests": 133,
+        "cards": 134,
+        "fame": 23
+      }
+    ]
+  },
+  "last_activity": {
+    "updates": [
+      {
+        "name": "Zaelius",
+        "updated_at": "2024-10-22T10:58:47.4250286-04:00"
       }
     ]
   }

@@ -171,3 +171,20 @@ func RemoveMember(memberName string) error {
 
 	return nil
 }
+
+func UpdateTimestamp(flaggedChar string) error {
+	config := ParseConfig()
+
+	for i, player := range config.Activity.Updated {
+		if player.Name == flaggedChar {
+			config.Activity.Updated[i].UpdateAt = time.Now()
+		}
+	}
+
+	// Save the updated configuration to the JSON file
+	if err := saveConfig(config); err != nil {
+		return err
+	}
+
+	return nil
+}
