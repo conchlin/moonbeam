@@ -21,7 +21,12 @@ var mu sync.Mutex
 func loadCurrentMemberData() error {
 	cfg := config.ParseConfig()
 
-	for _, member := range cfg.Guild.Members {
+	for _, member := range cfg.Guild.Moonbeam {
+		player := config.ConvertJsonToPlayer(member)
+		currentMemberData = append(currentMemberData, player)
+		validMemberNames = append(validMemberNames, player.Name)
+	}
+	for _, member := range cfg.Guild.Lefay {
 		player := config.ConvertJsonToPlayer(member)
 		currentMemberData = append(currentMemberData, player)
 		validMemberNames = append(validMemberNames, player.Name)
@@ -97,7 +102,7 @@ func compareMemberData() ([]string, []string) {
 				if currentData.Guild != newData.Guild {
 					// log to console instead of discord
 					fmt.Printf("%s has left the guild", currentData.Name)
-					config.RemoveMember(currentData.Name)
+					config.RemoveMember(currentData.Name, currentData.Guild)
 				}
 				if currentData.Job != newData.Job {
 					diffs = append(diffs, fmt.Sprintf("%s has advanced to %s!", currentData.Name, newData.Job))

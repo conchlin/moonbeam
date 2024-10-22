@@ -12,10 +12,11 @@ import (
 var currentMemberList []utils.Player
 
 func HandleGuildList(session *discordgo.Session, message *discordgo.MessageCreate) {
+	msgSplit := strings.SplitAfter(message.Content, " ")
 	var formattedList strings.Builder
 
 	go func() {
-		loadCurrentGuildMembers()
+		loadCurrentGuildMembers(msgSplit[1])
 
 		formattedList.WriteString(fmt.Sprintf("Total Members: %v\n\n", len(currentMemberList)))
 		formattedList.WriteString("```")
@@ -37,12 +38,19 @@ func HandleGuildList(session *discordgo.Session, message *discordgo.MessageCreat
 	//c.SortStrings(currentMemberList)
 }
 
-func loadCurrentGuildMembers() {
+func loadCurrentGuildMembers(allianceMember string) {
 	cfg := config.ParseConfig()
 
-	for _, member := range cfg.Guild.Members {
-		player := config.ConvertJsonToPlayer(member)
-		currentMemberList = append(currentMemberList, player)
+	if allianceMember == "--moonbeam" {
+		for _, member := range cfg.Guild.Moonbeam {
+			player := config.ConvertJsonToPlayer(member)
+			currentMemberList = append(currentMemberList, player)
+		}
+	} else if allianceMember == "--lefay" {
+		for _, member := range cfg.Guild.Lefay {
+			player := config.ConvertJsonToPlayer(member)
+			currentMemberList = append(currentMemberList, player)
+		}
 	}
 
 }

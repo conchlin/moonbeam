@@ -3,7 +3,7 @@
     "securityToken": ""
   },
   "guild": {
-    "members": [
+    "moonbeam": [
       {
         "guild": "moonbeam",
         "name": "Purdy",
@@ -23,6 +23,17 @@
         "fame": 31
       },
       {
+        "guild": "moonbeam",
+        "name": "Zaelius",
+        "level": 101,
+        "job": "Mage (Ice/Lightning)",
+        "quests": 133,
+        "cards": 134,
+        "fame": 23
+      }
+    ],
+    "lefay": [
+      {
         "guild": "LeFay",
         "name": "Chomby",
         "level": 52,
@@ -32,13 +43,13 @@
         "fame": 12
       },
       {
-        "guild": "moonbeam",
-        "name": "Zaelius",
-        "level": 101,
-        "job": "Mage (Ice/Lightning)",
-        "quests": 133,
-        "cards": 134,
-        "fame": 23
+        "guild": "LeFay",
+        "name": "Kargo",
+        "level": 156,
+        "job": "Shadower",
+        "quests": 449,
+        "cards": 1580,
+        "fame": 325
       }
     ]
   },
@@ -47,6 +58,10 @@
       {
         "name": "Zaelius",
         "updated_at": "2024-10-22T10:58:47.4250286-04:00"
+      },
+      {
+        "name": "Kargo",
+        "updated_at": "2024-10-22T12:09:05.3524422-04:00"
       }
     ]
   }

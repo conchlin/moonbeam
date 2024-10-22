@@ -39,7 +39,8 @@ type discordConfig struct {
 
 // guild member specific info
 type GuildConfig struct {
-	Members []MemberInfo `json:"members"`
+	Moonbeam []MemberInfo `json:"moonbeam"`
+	Lefay    []MemberInfo `json:"lefay"`
 }
 
 type ActivityConfig struct {
@@ -79,7 +80,7 @@ func saveConfig(config *Config) error {
 	return nil
 }
 
-func AddMember(user utils.Player) error {
+func AddMember(user utils.Player, allianceMember string) error {
 	config := ParseConfig()
 	newMember := MemberInfo{
 		Guild:  user.Guild,
@@ -96,7 +97,12 @@ func AddMember(user utils.Player) error {
 	}
 
 	// Append new member to existing member slice
-	config.Guild.Members = append(config.Guild.Members, newMember)
+	if allianceMember == "--moonbeam" {
+		config.Guild.Moonbeam = append(config.Guild.Moonbeam, newMember)
+	} else if allianceMember == "--lefay" {
+		config.Guild.Lefay = append(config.Guild.Lefay, newMember)
+	}
+
 	config.Activity.Updated = append(config.Activity.Updated, timeNow)
 
 	// Save the updated configuration to the JSON file
@@ -122,7 +128,9 @@ func ConvertJsonToPlayer(member MemberInfo) utils.Player {
 func RefreshMemberList(data []utils.Player) error {
 	config := ParseConfig()
 	//clear before adding new list
-	config.Guild.Members = nil
+	config.Guild.Moonbeam = nil
+	config.Guild.Lefay = nil
+
 	for _, entry := range data {
 		updatedMember := MemberInfo{
 			Guild:  entry.Guild,
@@ -135,7 +143,11 @@ func RefreshMemberList(data []utils.Player) error {
 		}
 
 		// Append new member to existing member slice
-		config.Guild.Members = append(config.Guild.Members, updatedMember)
+		if updatedMember.Guild == "moonbeam" {
+			config.Guild.Moonbeam = append(config.Guild.Moonbeam, updatedMember)
+		} else if updatedMember.Guild == "LeFay" {
+			config.Guild.Lefay = append(config.Guild.Lefay, updatedMember)
+		}
 	}
 
 	// Save the updated configuration to the JSON file
@@ -146,14 +158,23 @@ func RefreshMemberList(data []utils.Player) error {
 	return nil
 }
 
-func RemoveMember(memberName string) error {
+func RemoveMember(memberName string, allianceMember string) error {
 	config := ParseConfig()
 
 	index := -1
-	for i, member := range config.Guild.Members {
-		if member.Name == memberName {
-			index = i
-			break
+	if allianceMember == "--moonbeam" {
+		for i, member := range config.Guild.Moonbeam {
+			if member.Name == memberName {
+				index = i
+				break
+			}
+		}
+	} else if allianceMember == "--lefay" {
+		for i, member := range config.Guild.Lefay {
+			if member.Name == memberName {
+				index = i
+				break
+			}
 		}
 	}
 
@@ -162,7 +183,11 @@ func RemoveMember(memberName string) error {
 	}
 
 	// Remove the member from the slice
-	config.Guild.Members = append(config.Guild.Members[:index], config.Guild.Members[index+1:]...)
+	if allianceMember == "--moonbeam" {
+		config.Guild.Moonbeam = append(config.Guild.Moonbeam[:index], config.Guild.Moonbeam[index+1:]...)
+	} else if allianceMember == "--lefay" {
+		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
+	}
 
 	// Save the updated configuration to the JSON file
 	if err := saveConfig(config); err != nil {

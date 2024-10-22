@@ -19,7 +19,7 @@ func HandleStartFeed(session *discordgo.Session, message *discordgo.MessageCreat
 	active = true
 
 	session.ChannelMessageSendEmbed(feedChannel, &discordgo.MessageEmbed{
-		Title:       "Moonbeam Guild Updates",
+		Title:       "LeBeam Alliance Updates",
 		Description: "Updates have now been turned on",
 		Color:       0x2cdaca,
 	})
@@ -35,7 +35,7 @@ func CreateFeedPosts(events []string) {
 
 			s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
 				Embed: &discordgo.MessageEmbed{
-					Title:       "Guild Update",
+					Title:       "LeBeam Alliance Update",
 					Description: event,
 					Color:       0x2cdaca,
 				},
