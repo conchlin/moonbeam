@@ -12,7 +12,14 @@ import (
 
 func HandleNewGuildMember(session *discordgo.Session, message *discordgo.MessageCreate) {
 	msgSplit := strings.SplitAfter(message.Content, " ")
-	guildName := msgSplit[2]
+	if len(msgSplit) != 3 {
+		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
+			Title:       "Error",
+			Description: "Please use the following syntax $addmember <ign> <--guild>",
+			Color:       0x2cdaca,
+		})
+		return
+	}
 
 	perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
 	if e != nil {
@@ -25,7 +32,7 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 			log.Println("Failed to parse character. This character does not exist")
 			return
 		}
-		config.AddMember(playerInfo, guildName)
+		config.AddMember(playerInfo, msgSplit[2])
 		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
 		imgBuf, _ := utils.ParseChracterImage(imgUrl)
 

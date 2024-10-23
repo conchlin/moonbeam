@@ -97,9 +97,9 @@ func AddMember(user utils.Player, allianceMember string) error {
 	}
 
 	// Append new member to existing member slice
-	if allianceMember == "--moonbeam" {
+	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" {
 		config.Guild.Moonbeam = append(config.Guild.Moonbeam, newMember)
-	} else if allianceMember == "--lefay" {
+	} else if allianceMember == "--lefay" || allianceMember == "lefay" {
 		config.Guild.Lefay = append(config.Guild.Lefay, newMember)
 	}
 
@@ -162,14 +162,14 @@ func RemoveMember(memberName string, allianceMember string) error {
 	config := ParseConfig()
 
 	index := -1
-	if allianceMember == "--moonbeam" {
+	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" {
 		for i, member := range config.Guild.Moonbeam {
 			if member.Name == memberName {
 				index = i
 				break
 			}
 		}
-	} else if allianceMember == "--lefay" {
+	} else if allianceMember == "--lefay" || allianceMember == "moonbeam" {
 		for i, member := range config.Guild.Lefay {
 			if member.Name == memberName {
 				index = i
@@ -183,9 +183,9 @@ func RemoveMember(memberName string, allianceMember string) error {
 	}
 
 	// Remove the member from the slice
-	if allianceMember == "--moonbeam" {
+	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" {
 		config.Guild.Moonbeam = append(config.Guild.Moonbeam[:index], config.Guild.Moonbeam[index+1:]...)
-	} else if allianceMember == "--lefay" {
+	} else if allianceMember == "--lefay" || allianceMember == "moonbeam" {
 		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
 	}
 
