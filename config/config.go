@@ -41,6 +41,7 @@ type discordConfig struct {
 type GuildConfig struct {
 	Moonbeam []MemberInfo `json:"moonbeam"`
 	Lefay    []MemberInfo `json:"lefay"`
+	Basement []MemberInfo `json:"basement"`
 }
 
 type ActivityConfig struct {
@@ -101,6 +102,8 @@ func AddMember(user utils.Player, allianceMember string) error {
 		config.Guild.Moonbeam = append(config.Guild.Moonbeam, newMember)
 	} else if allianceMember == "--lefay" || allianceMember == "lefay" {
 		config.Guild.Lefay = append(config.Guild.Lefay, newMember)
+	} else if allianceMember == "--basement" || allianceMember == "basement" {
+		config.Guild.Basement = append(config.Guild.Basement, newMember)
 	}
 
 	config.Activity.Updated = append(config.Activity.Updated, timeNow)
@@ -130,6 +133,7 @@ func RefreshMemberList(data []utils.Player) error {
 	//clear before adding new list
 	config.Guild.Moonbeam = nil
 	config.Guild.Lefay = nil
+	config.Guild.Basement = nil
 
 	for _, entry := range data {
 		updatedMember := MemberInfo{
@@ -147,6 +151,8 @@ func RefreshMemberList(data []utils.Player) error {
 			config.Guild.Moonbeam = append(config.Guild.Moonbeam, updatedMember)
 		} else if updatedMember.Guild == "LeFay" {
 			config.Guild.Lefay = append(config.Guild.Lefay, updatedMember)
+		} else if updatedMember.Guild == "Basement" {
+			config.Guild.Basement = append(config.Guild.Basement, updatedMember)
 		}
 	}
 
@@ -162,15 +168,10 @@ func RemoveMember(memberName string, allianceMember string) error {
 	config := ParseConfig()
 
 	index := -1
-	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" {
+	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" ||
+		allianceMember == "--lefay" || allianceMember == "lefay" ||
+		allianceMember == "--basement" || allianceMember == "basement" {
 		for i, member := range config.Guild.Moonbeam {
-			if member.Name == memberName {
-				index = i
-				break
-			}
-		}
-	} else if allianceMember == "--lefay" || allianceMember == "moonbeam" {
-		for i, member := range config.Guild.Lefay {
 			if member.Name == memberName {
 				index = i
 				break
@@ -187,6 +188,8 @@ func RemoveMember(memberName string, allianceMember string) error {
 		config.Guild.Moonbeam = append(config.Guild.Moonbeam[:index], config.Guild.Moonbeam[index+1:]...)
 	} else if allianceMember == "--lefay" || allianceMember == "moonbeam" {
 		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
+	} else if allianceMember == "--basement" || allianceMember == "basement" {
+		config.Guild.Basement = append(config.Guild.Basement[:index], config.Guild.Basement[index+1:]...)
 	}
 
 	// Save the updated configuration to the JSON file

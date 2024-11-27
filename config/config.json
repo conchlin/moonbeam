@@ -9,59 +9,39 @@
         "name": "Purdy",
         "level": 97,
         "job": "Outlaw",
-        "quests": 475,
-        "cards": 886,
-        "fame": 90
-      },
-      {
-        "guild": "moonbeam",
-        "name": "Quenya",
-        "level": 106,
-        "job": "Priest",
-        "quests": 211,
-        "cards": 250,
-        "fame": 31
-      },
-      {
-        "guild": "moonbeam",
-        "name": "Zaelius",
-        "level": 101,
-        "job": "Mage (Ice/Lightning)",
-        "quests": 133,
-        "cards": 134,
-        "fame": 23
+        "quests": 478,
+        "cards": 888,
+        "fame": 93
       }
     ],
     "lefay": [
       {
         "guild": "LeFay",
-        "name": "Chomby",
-        "level": 52,
-        "job": "Bandit",
-        "quests": 172,
-        "cards": 59,
-        "fame": 12
-      },
-      {
-        "guild": "LeFay",
         "name": "Kargo",
-        "level": 156,
+        "level": 157,
         "job": "Shadower",
-        "quests": 449,
-        "cards": 1580,
-        "fame": 325
+        "quests": 459,
+        "cards": 1619,
+        "fame": 360
+      }
+    ],
+    "basement": [
+      {
+        "guild": "Basement",
+        "name": "TillyNoob",
+        "level": 129,
+        "job": "Night Lord",
+        "quests": 431,
+        "cards": 507,
+        "fame": 111
       }
     ]
   },
   "last_activity": {
     "updates": [
       {
-        "name": "Zaelius",
-        "updated_at": "2024-10-22T10:58:47.4250286-04:00"
-      },
-      {
         "name": "Kargo",
-        "updated_at": "2024-10-22T12:09:05.3524422-04:00"
+        "updated_at": "2024-11-26T19:09:07.5164111-05:00"
       }
     ]
   }

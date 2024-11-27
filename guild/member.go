@@ -31,6 +31,11 @@ func loadCurrentMemberData() error {
 		currentMemberData = append(currentMemberData, player)
 		validMemberNames = append(validMemberNames, player.Name)
 	}
+	for _, member := range cfg.Guild.Basement {
+		player := config.ConvertJsonToPlayer(member)
+		currentMemberData = append(currentMemberData, player)
+		validMemberNames = append(validMemberNames, player.Name)
+	}
 
 	return nil
 }

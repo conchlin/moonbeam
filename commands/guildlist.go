@@ -51,6 +51,11 @@ func loadCurrentGuildMembers(allianceMember string) {
 			player := config.ConvertJsonToPlayer(member)
 			currentMemberList = append(currentMemberList, player)
 		}
+	} else if allianceMember == "--basement" {
+		for _, member := range cfg.Guild.Basement {
+			player := config.ConvertJsonToPlayer(member)
+			currentMemberList = append(currentMemberList, player)
+		}
 	}
 
 }
