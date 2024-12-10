@@ -62,9 +62,9 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleDocu(session, message)
 	case message.Content == "$startguildfeed":
 		commands.HandleStartFeed(session, message)
-	case message.Content == "$guildlist":
-		commands.HandleGuildList(session, message)
 	// for commands that use additional input we need strings.Contains
+	case strings.Contains(message.Content, "$guildlist"):
+		commands.HandleGuildList(session, message)
 	case strings.Contains(message.Content, "$createparty"):
 		commands.HandleCreateParty(session, message)
 	case strings.Contains(message.Content, "$joinparty"):
