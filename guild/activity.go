@@ -48,7 +48,7 @@ func CreateFeedPosts(events []Event) {
 			charUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0])
 			imgBuf, _ := utils.ParseChracterImage(charUrl)
 
-			s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
+			msg, err := s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
 				Embed: &discordgo.MessageEmbed{
 					Title:       fmt.Sprintf("%s Alliance Update", event.Guild),
 					Description: event.Achievement,
@@ -59,6 +59,30 @@ func CreateFeedPosts(events []Event) {
 					Reader: imgBuf,
 				},
 			})
+			if err != nil {
+				fmt.Printf("Error sending message: %v\n", err)
+				continue
+			}
+
+			addReactions(feedChannel, msg.ID, event.Guild)
 		}
 	}
+}
+
+func addReactions(channelId, messageId, guildName string) {
+	var unicode string
+	if guildName == "moonbeam" {
+		unicode = "moonbeam:1308663568220295229"
+	} else if guildName == "Lefay" {
+		unicode = "lefay:1308663511894986812"
+	} else if guildName == "Basement" {
+		unicode = "basement:1308663430797983745"
+	}
+
+	err := s.MessageReactionAdd(channelId, messageId, unicode)
+	if err != nil {
+		fmt.Printf("Error adding reaction: %v\n", err)
+	}
+
+	//handle streak here
 }
