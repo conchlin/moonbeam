@@ -73,7 +73,7 @@ func addReactions(channelId, messageId, guildName string) {
 	var unicode string
 	if guildName == "moonbeam" {
 		unicode = "moonbeam:1308663568220295229"
-	} else if guildName == "Lefay" {
+	} else if guildName == "LeFay" {
 		unicode = "lefay:1308663511894986812"
 	} else if guildName == "Basement" {
 		unicode = "basement:1308663430797983745"
