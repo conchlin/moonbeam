@@ -3,9 +3,11 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"moonbeam/utils"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -62,6 +64,40 @@ func ParseConfig() *Config {
 	}
 
 	return config
+}
+
+// creates the backup at the same time
+func ParseConfigForBackup() (string, error) {
+	jsonFile, err := os.Open("config/config.json")
+	if err != nil {
+		return "", fmt.Errorf("failed to open config file: %w", err)
+	}
+	defer jsonFile.Close()
+
+	var builder strings.Builder
+	_, err = io.Copy(&builder, jsonFile)
+	if err != nil {
+		return "", fmt.Errorf("failed to read config file: %w", err)
+	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(builder.String()), &data)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse JSON: %w", err)
+	}
+
+	formattedJSON, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("failed to format JSON: %w", err)
+	}
+
+	backupPath := "config/config_backup.json"
+	err = os.WriteFile(backupPath, formattedJSON, 0644)
+	if err != nil {
+		return "", fmt.Errorf("failed to create backup file: %w", err)
+	}
+
+	return string(formattedJSON), nil
 }
 
 func saveConfig(config *Config) error {

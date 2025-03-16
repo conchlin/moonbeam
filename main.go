@@ -62,6 +62,8 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleDocu(session, message)
 	case message.Content == "$startguildfeed":
 		guild.HandleStartFeed(session, message)
+	case message.Content == "$createbackup":
+		commands.HandleBackupCreation(session, message)
 	// for commands that use additional input we need strings.Contains
 	case strings.Contains(message.Content, "$guildlist"):
 		commands.HandleGuildList(session, message)
