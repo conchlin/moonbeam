@@ -100,6 +100,53 @@ func ParseConfigForBackup() (string, error) {
 	return string(formattedJSON), nil
 }
 
+func ParseBackupConfig() (map[string]interface{}, error) {
+	backupPath := "config/config_backup.json"
+
+	backupFile, err := os.Open(backupPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open backup file: %w", err)
+	}
+	defer backupFile.Close()
+
+	var builder strings.Builder
+	_, err = io.Copy(&builder, backupFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read backup file: %w", err)
+	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(builder.String()), &data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse JSON: %w", err)
+	}
+
+	return data, nil
+}
+
+func ClearAndWriteConfig(newContent map[string]interface{}) error {
+	configPath := "config/config.json"
+
+	file, err := os.OpenFile(configPath, os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to open config file: %w", err)
+	}
+	defer file.Close()
+
+	jsonData, err := json.MarshalIndent(newContent, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to encode string as JSON: %w", err)
+	}
+
+	_, err = file.Write(jsonData)
+	if err != nil {
+		return fmt.Errorf("failed to write to config file: %w", err)
+	}
+
+	fmt.Println("Config file cleared and updated successfully.")
+	return nil
+}
+
 func saveConfig(config *Config) error {
 	jsonFile, err := os.Create("config/config.json")
 	if err != nil {
