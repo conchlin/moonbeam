@@ -121,7 +121,8 @@ func compareMemberData() ([]Event, []string) {
 					})
 					updatedPlayer = append(updatedPlayer, currentData.Name)
 				}
-				if currentData.Level != newData.Level {
+				if currentData.Level != newData.Level && newData.Level >= 30 {
+					// only send level up posts if the player is at least level 30
 					diffs = append(diffs, Event{
 						Achievement: fmt.Sprintf("%s has reached level %v!", currentData.Name, newData.Level),
 						Guild:       newData.Guild,
