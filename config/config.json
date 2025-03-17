@@ -35,6 +35,17 @@
         "cards": 507,
         "fame": 111
       }
+    ],
+    "torrent": [
+      {
+        "guild": "Torrent",
+        "name": "Sentret",
+        "level": 73,
+        "job": "Hermit",
+        "quests": 62,
+        "cards": 13,
+        "fame": 13
+      }
     ]
   },
   "last_activity": {
