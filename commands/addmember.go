@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"moonbeam/config"
@@ -34,7 +35,7 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 		}
 		config.AddMember(playerInfo, msgSplit[2])
 		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
-		imgBuf, _ := utils.ParseChracterImage(imgUrl)
+		imgBuf, _ := utils.ParseCharacterImage(imgUrl)
 
 		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
 			Embed: &discordgo.MessageEmbed{
@@ -44,7 +45,7 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 			},
 			File: &discordgo.File{
 				Name:   "output.png",
-				Reader: imgBuf,
+				Reader: bytes.NewReader(imgBuf.Bytes()),
 			},
 		})
 	}

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"moonbeam/party"
@@ -32,7 +33,7 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 
 	if validParty != nil {
 		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
-		imgBuf, _ := utils.ParseChracterImage(imgUrl)
+		imgBuf, _ := utils.ParseCharacterImage(imgUrl)
 		validParty.AddMember(newMember)
 		validParty.ShowPartyInfo()
 
@@ -44,7 +45,7 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 			},
 			File: &discordgo.File{
 				Name:   "output.png",
-				Reader: imgBuf,
+				Reader: bytes.NewReader(imgBuf.Bytes()),
 			},
 		})
 	} else {

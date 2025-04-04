@@ -1,6 +1,7 @@
 package guild
 
 import (
+	"bytes"
 	"fmt"
 	"moonbeam/config"
 	"moonbeam/utils"
@@ -46,7 +47,7 @@ func CreateFeedPosts(events []Event) {
 			// grab the char name which is the first word of event
 			split := strings.SplitAfter(event.Achievement, " ")
 			charUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0])
-			imgBuf, _ := utils.ParseChracterImage(charUrl)
+			imgBuf, _ := utils.ParseCharacterImage(charUrl)
 
 			msg, err := s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
 				Embed: &discordgo.MessageEmbed{
@@ -56,7 +57,7 @@ func CreateFeedPosts(events []Event) {
 				},
 				File: &discordgo.File{
 					Name:   "output.png",
-					Reader: imgBuf,
+					Reader: bytes.NewReader(imgBuf.Bytes()),
 				},
 			})
 			if err != nil {
