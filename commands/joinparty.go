@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"moonbeam/party"
@@ -37,17 +36,7 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 		validParty.AddMember(newMember)
 		validParty.ShowPartyInfo()
 
-		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
-			Embed: &discordgo.MessageEmbed{
-				Title:       "New Member!",
-				Description: "You have successfully joined the party!",
-				Color:       0x2cdaca,
-			},
-			File: &discordgo.File{
-				Name:   "output.png",
-				Reader: bytes.NewReader(imgBuf.Bytes()),
-			},
-		})
+		utils.SendMessageWithImage(session, message.ChannelID, "New Member!", "You have successfully joined the party!", imgBuf.Bytes())
 	} else {
 		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name>", err))
 		return

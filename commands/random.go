@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"math/rand"
+	"moonbeam/utils"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -12,13 +13,8 @@ func HandleListRandomizer(session *discordgo.Session, message *discordgo.Message
 	sliceOfStrings := splitEachString(message.Content)
 	randShuffle(sliceOfStrings)
 
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title: "Randomized Result!",
-		// only show the first result of the shuffled slice
-
-		Description: strings.Trim(fmt.Sprintf("%s", sliceOfStrings[:1]), "[ ]"),
-		Color:       0x2cdaca,
-	})
+	// only show the first result of the shuffled slice
+	utils.SendMessage(session, message.ChannelID, "Randomized Result!", strings.Trim(fmt.Sprintf("%s", sliceOfStrings[:1]), "[ ]"))
 }
 
 func splitEachString(msg string) []string {

@@ -32,13 +32,7 @@ func HandleGuildList(session *discordgo.Session, message *discordgo.MessageCreat
 		}
 		formattedList.WriteString("```")
 
-		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
-			Embed: &discordgo.MessageEmbed{
-				Title:       "Guild List",
-				Description: formattedList.String(),
-				Color:       0x2cdaca,
-			},
-		})
+		utils.SendMessage(session, message.ChannelID, "Guild List", formattedList.String())
 
 		clear()
 	}()

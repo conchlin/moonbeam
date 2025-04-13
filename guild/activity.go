@@ -26,11 +26,7 @@ func HandleStartFeed(session *discordgo.Session, message *discordgo.MessageCreat
 	s = session
 	active = true
 
-	session.ChannelMessageSendEmbed(feedChannel, &discordgo.MessageEmbed{
-		Title:       "Crossroads Alliance Updates",
-		Description: "Updates have now been turned on",
-		Color:       0x2cdaca,
-	})
+	utils.SendMessage(session, message.ChannelID, "Crossroads Alliance Updates", "Updates have now been turned on")
 }
 
 func FlagForUpdate(players []string) {

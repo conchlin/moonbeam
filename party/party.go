@@ -169,11 +169,7 @@ func ShowAllParties(session *discordgo.Session, message *discordgo.MessageCreate
 		builder.WriteString("```" + party.ShowPartyInfo() + "```")
 	}
 
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       "Current Recruiting Party",
-		Description: builder.String(),
-		Color:       0x2cdaca,
-	})
+	utils.SendMessage(session, message.ChannelID, "Current Recruiting Party", builder.String())
 }
 
 // parses a time input string and adjusts it to represent today's date if requested.
@@ -216,10 +212,6 @@ func BroadcastPartyMessage(session *discordgo.Session, message *discordgo.Messag
 			DeleteParty(party.ID)
 		})
 
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "Event time!",
-			Description: builder.String(),
-			Color:       0x2cdaca,
-		})
+		utils.SendMessage(session, message.ChannelID, "Event time!", builder.String())
 	}
 }

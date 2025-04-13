@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"moonbeam/config"
@@ -14,11 +13,7 @@ import (
 func HandleNewGuildMember(session *discordgo.Session, message *discordgo.MessageCreate) {
 	msgSplit := strings.SplitAfter(message.Content, " ")
 	if len(msgSplit) != 3 {
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "Error",
-			Description: "Please use the following syntax $addmember <ign> <--guild>",
-			Color:       0x2cdaca,
-		})
+		utils.SendMessage(session, message.ChannelID, "Error", "Please use the following syntax $addmember <ign> <--guild>")
 		return
 	}
 
@@ -37,16 +32,6 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
 		imgBuf, _ := utils.ParseCharacterImage(imgUrl)
 
-		session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
-			Embed: &discordgo.MessageEmbed{
-				Title:       playerInfo.Name,
-				Description: "Successfully added to the guild list",
-				Color:       0x2cdaca,
-			},
-			File: &discordgo.File{
-				Name:   "output.png",
-				Reader: bytes.NewReader(imgBuf.Bytes()),
-			},
-		})
+		utils.SendMessageWithImage(session, message.ChannelID, playerInfo.Name, "Successfully added to the guild list", imgBuf.Bytes())
 	}
 }

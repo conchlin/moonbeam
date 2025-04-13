@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"moonbeam/party"
+	"moonbeam/utils"
 	"strconv"
 	"strings"
 
@@ -25,11 +26,7 @@ func HandlePartyDeletion(session *discordgo.Session, message *discordgo.MessageC
 	}
 
 	if party.DeleteParty(id) {
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "Party Deleted",
-			Description: "The party has been successfully deleted!",
-			Color:       0x2cdaca,
-		})
+		utils.SendMessage(session, message.ChannelID, "Party Deleted", "The party has been successfully deleted!")
 	} else {
 		session.ChannelMessageSend(message.ChannelID, fmt.Sprintf("Error in party deletion of ID %v", id))
 		return

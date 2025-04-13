@@ -26,11 +26,7 @@ func HandleCreateParty(session *discordgo.Session, message *discordgo.MessageCre
 	}
 
 	newParty := party.NewParty(message.Author, _type, _time)
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       "New Party",
-		Description: "A new " + _type + " party has been created!",
-		Color:       0x2cdaca,
-	})
+	utils.SendMessage(session, message.ChannelID, "New Party", "A new "+_type+" party has been created!")
 
 	// calculate the difference between the two times
 	currentTime := time.Now().UTC()

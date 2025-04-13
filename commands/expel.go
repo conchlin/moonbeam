@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"moonbeam/party"
+	"moonbeam/utils"
 	"strconv"
 	"strings"
 
@@ -33,11 +34,7 @@ func HandleExpelMember(session *discordgo.Session, message *discordgo.MessageCre
 		return
 	}
 
-	session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       "Player Removed",
-		Description: player.PlayerName + " has been removed from the party.",
-		Color:       0x2cdaca,
-	})
+	utils.SendMessage(session, message.ChannelID, "Player Removed", player.PlayerName+" has been removed from the party.")
 }
 
 // splitRemoveMemberString parses the input message for the $expel command and extracts

@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bytes"
 	"fmt"
 	"moonbeam/utils"
 	"strings"
@@ -27,15 +26,5 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 
 	imgBuf, _ := utils.ParseCharacterImage(imgUrl)
 
-	session.ChannelMessageSendComplex(message.ChannelID, &discordgo.MessageSend{
-		Embed: &discordgo.MessageEmbed{
-			Title:       playerInfo.Name,
-			Description: builder.String(),
-			Color:       0x2cdaca,
-		},
-		File: &discordgo.File{
-			Name:   "output.png",
-			Reader: bytes.NewReader(imgBuf.Bytes()),
-		},
-	})
+	utils.SendMessageWithImage(session, message.ChannelID, playerInfo.Name, builder.String(), imgBuf.Bytes())
 }

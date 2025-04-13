@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"moonbeam/config"
+	"moonbeam/utils"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -19,11 +20,7 @@ func HandleBackupCreation(session *discordgo.Session, message *discordgo.Message
 			return
 		}
 
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "Success",
-			Description: "Backup has been created",
-			Color:       0x2cdaca,
-		})
+		utils.SendMessage(session, message.ChannelID, "Success", "Backup has been created")
 	}
 }
 
@@ -46,10 +43,6 @@ func HandleApplyingBackup(session *discordgo.Session, message *discordgo.Message
 			return
 		}
 
-		session.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-			Title:       "Success",
-			Description: "Current config has been replaced by the backup.",
-			Color:       0x2cdaca,
-		})
+		utils.SendMessage(session, message.ChannelID, "Success", "Current config has been replaced by the backup.")
 	}
 }
