@@ -39,34 +39,39 @@ func FlagForUpdate(players []string) {
 }
 
 func CreateFeedPosts(events []Event) {
-	if active {
-		for _, event := range events {
-			// grab the char name which is the first word of event
-			split := strings.SplitAfter(event.Achievement, " ")
-			charUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", split[0])
-			imgBuf, err := utils.ParseCharacterImage(charUrl)
-			if err != nil {
-				log.Println("Error occurred:", err)
-			}
+	if !active {
+		return
+	}
 
-			msg, err := s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
-				Embed: &discordgo.MessageEmbed{
-					Title:       fmt.Sprintf("%s Alliance Update", event.Guild),
-					Description: event.Achievement,
-					Color:       0x2cdaca,
-				},
-				File: &discordgo.File{
-					Name:   "output.png",
-					Reader: bytes.NewReader(imgBuf.Bytes()),
-				},
-			})
-			if err != nil {
-				fmt.Printf("Error sending message: %v\n", err)
-				continue
-			}
+	for _, event := range events {
+		// grab the char name which is the first word of event
+		eventPhrase := strings.Fields(event.Achievement)
+		charName := eventPhrase[0]
+		charUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", charName)
 
-			addReactions(feedChannel, msg.ID, event.Guild)
+		imgBuf, err := utils.ParseCharacterImage(charUrl)
+		if err != nil {
+			log.Println("Error occurred:", err)
+			continue
 		}
+
+		msg, err := s.ChannelMessageSendComplex(feedChannel, &discordgo.MessageSend{
+			Embed: &discordgo.MessageEmbed{
+				Title:       fmt.Sprintf("%s Alliance Update", event.Guild),
+				Description: event.Achievement,
+				Color:       0x2cdaca,
+			},
+			File: &discordgo.File{
+				Name:   "output.png",
+				Reader: bytes.NewReader(imgBuf.Bytes()),
+			},
+		})
+		if err != nil {
+			fmt.Printf("Error sending message: %v\n", err)
+			continue
+		}
+
+		addReactions(feedChannel, msg.ID, event.Guild)
 	}
 }
 
