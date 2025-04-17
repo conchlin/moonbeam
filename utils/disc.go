@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -29,6 +30,16 @@ func SendMessage(session *discordgo.Session, channelID, msgTitle, msgDescription
 		Embed: &discordgo.MessageEmbed{
 			Title:       msgTitle,
 			Description: msgDescription,
+			Color:       0x2cdaca,
+		},
+	})
+}
+
+func SendErrorMessage(session *discordgo.Session, channelID string, err error) {
+	session.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{
+		Embed: &discordgo.MessageEmbed{
+			Title:       "Error",
+			Description: fmt.Sprintf("The following error has occured: %v", err),
 			Color:       0x2cdaca,
 		},
 	})

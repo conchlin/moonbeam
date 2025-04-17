@@ -32,11 +32,16 @@ func ParseCharacterJSON(username string) (Player, error) {
 	jsonUrl := fmt.Sprintf("https://maplelegends.com/api/character?name=%s", username)
 	charInfo, err := client.Get(jsonUrl)
 	if err != nil {
-		return data, fmt.Errorf("this character does not exist")
+		return data, err
 	}
 
 	body, _ := io.ReadAll(charInfo.Body)
 	json.Unmarshal(body, &data)
+
+	// check for empty responses and handle
+	if data.Name == "" {
+		return data, fmt.Errorf("character not found")
+	}
 
 	return data, nil
 }
@@ -45,7 +50,7 @@ func ParseCharacterJSON(username string) (Player, error) {
 func ParseCharacterImage(url string) (*bytes.Buffer, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("this character does not exist")
+		return nil, err
 	}
 	defer resp.Body.Close()
 

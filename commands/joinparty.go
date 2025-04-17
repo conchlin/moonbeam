@@ -31,12 +31,16 @@ func HandleJoinParty(session *discordgo.Session, message *discordgo.MessageCreat
 	validParty := party.GetPartyByID(id)
 
 	if validParty != nil {
-		imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
-		imgBuf, _ := utils.ParseCharacterImage(imgUrl)
-		validParty.AddMember(newMember)
+		//imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
+		//imgBuf, _ := utils.ParseCharacterImage(imgUrl)
+		err := validParty.AddMember(newMember)
+		if err != nil {
+			utils.SendErrorMessage(session, message.ChannelID, err)
+			return
+		}
 		validParty.ShowPartyInfo()
 
-		utils.SendMessageWithImage(session, message.ChannelID, "New Member!", "You have successfully joined the party!", imgBuf.Bytes())
+		utils.SendMessage(session, message.ChannelID, "New Member!", "You have successfully joined the party!")
 	} else {
 		session.ChannelMessage(message.ChannelID, fmt.Sprintf("Error in joining party: %v The command syntax is $joinparty <player_name>", err))
 		return

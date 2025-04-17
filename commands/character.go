@@ -13,7 +13,11 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 	msgLower := strings.ToLower(message.Content)
 	msgSplit := strings.SplitAfter(msgLower, " ")
 
-	playerInfo, _ := utils.ParseCharacterJSON(msgSplit[1])
+	playerInfo, err := utils.ParseCharacterJSON(msgSplit[1])
+	if err != nil {
+		utils.SendErrorMessage(session, message.ChannelID, err)
+		return
+	}
 	imgUrl := fmt.Sprintf("https://maplelegends.com/api/getavatar?name=%s", playerInfo.Name)
 
 	builder.WriteString(fmt.Sprintf("Level: %d\n", playerInfo.Level))
@@ -24,7 +28,11 @@ func HandleCharacterRequest(session *discordgo.Session, message *discordgo.Messa
 	builder.WriteString(fmt.Sprintf("Job: %s\n", playerInfo.Job))
 	builder.WriteString(fmt.Sprintf("Guild: %s\n", playerInfo.Guild))
 
-	imgBuf, _ := utils.ParseCharacterImage(imgUrl)
+	imgBuf, err := utils.ParseCharacterImage(imgUrl)
+	if err != nil {
+		utils.SendErrorMessage(session, message.ChannelID, err)
+		return
+	}
 
 	utils.SendMessageWithImage(session, message.ChannelID, playerInfo.Name, builder.String(), imgBuf.Bytes())
 }
