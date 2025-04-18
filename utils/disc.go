@@ -24,6 +24,15 @@ func SendMessageWithImage(session *discordgo.Session, channelID, msgTitle, msgDe
 	})
 }
 
+func SendMessageWithFields(session *discordgo.Session, channelID, msgTitle, msgDescription string, field []*discordgo.MessageEmbedField) {
+	session.ChannelMessageSendEmbed(channelID, &discordgo.MessageEmbed{
+		Title:       msgTitle,
+		Description: msgDescription,
+		Fields:      field,
+		Color:       0x2cdaca,
+	})
+}
+
 // default discord message
 func SendMessage(session *discordgo.Session, channelID, msgTitle, msgDescription string) {
 	session.ChannelMessageSendComplex(channelID, &discordgo.MessageSend{

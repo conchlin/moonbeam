@@ -1,12 +1,16 @@
 package commands
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"moonbeam/utils"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 /**
 This command provides very simple documentation on app commands
 */
 
-func HandleHelp(discord *discordgo.Session, message *discordgo.MessageCreate) {
+func HandleHelp(session *discordgo.Session, message *discordgo.MessageCreate) {
 	var title string
 	var description string
 	var fields []*discordgo.MessageEmbedField
@@ -40,10 +44,5 @@ func HandleHelp(discord *discordgo.Session, message *discordgo.MessageCreate) {
 		},
 	}
 
-	discord.ChannelMessageSendEmbed(message.ChannelID, &discordgo.MessageEmbed{
-		Title:       title,
-		Description: description,
-		Fields:      fields,
-		Color:       0x2cdaca,
-	})
+	utils.SendMessageWithFields(session, message.ChannelID, title, description, fields)
 }
