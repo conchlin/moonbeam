@@ -257,12 +257,12 @@ func RemoveMember(memberName string, allianceMember string) error {
 	config := ParseConfig()
 
 	index := -1
-	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" ||
-		allianceMember == "--lefay" || allianceMember == "lefay" ||
-		allianceMember == "--basement" || allianceMember == "basement" ||
-		allianceMember == "--torrent" || allianceMember == "torrent" {
+	if strings.EqualFold(allianceMember, "moonbeam") ||
+		strings.EqualFold(allianceMember, "lefay") ||
+		strings.EqualFold(allianceMember, "basement") ||
+		strings.EqualFold(allianceMember, "torrent") {
 		for i, member := range config.Guild.Moonbeam {
-			if member.Name == memberName {
+			if strings.EqualFold(member.Name, memberName) {
 				index = i
 				break
 			}
@@ -274,13 +274,13 @@ func RemoveMember(memberName string, allianceMember string) error {
 	}
 
 	// Remove the member from the slice
-	if allianceMember == "--moonbeam" || allianceMember == "moonbeam" {
+	if strings.EqualFold(allianceMember, "moonbeam") {
 		config.Guild.Moonbeam = append(config.Guild.Moonbeam[:index], config.Guild.Moonbeam[index+1:]...)
-	} else if allianceMember == "--lefay" || allianceMember == "moonbeam" {
+	} else if strings.EqualFold(allianceMember, "lefay") {
 		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
-	} else if allianceMember == "--basement" || allianceMember == "basement" {
+	} else if strings.EqualFold(allianceMember, "basement") {
 		config.Guild.Basement = append(config.Guild.Basement[:index], config.Guild.Basement[index+1:]...)
-	} else if allianceMember == "--torrent" || allianceMember == "torrent" {
+	} else if strings.EqualFold(allianceMember, "torrent") {
 		config.Guild.Torrent = append(config.Guild.Torrent[:index], config.Guild.Torrent[index+1:]...)
 	}
 
