@@ -15,30 +15,25 @@ var validMemberNames []string
 var ticker *time.Ticker
 var mu sync.Mutex
 
-// Load all JSON member entries into newMemberInfo variable
+// Load all JSON member entries into currentMemberInfo variable
 // we also load all member names into validMemberName variable
 func loadCurrentMemberData() error {
 	cfg := config.ParseConfig()
 
-	for _, member := range cfg.Guild.Moonbeam {
-		player := config.ConvertJsonToPlayer(member)
-		currentMemberData = append(currentMemberData, player)
-		validMemberNames = append(validMemberNames, player.Name)
+	// use single guilds slice to reduce repetition
+	guilds := [][]config.MemberInfo{
+		cfg.Guild.Moonbeam,
+		cfg.Guild.Lefay,
+		cfg.Guild.Basement,
+		cfg.Guild.Torrent,
 	}
-	for _, member := range cfg.Guild.Lefay {
-		player := config.ConvertJsonToPlayer(member)
-		currentMemberData = append(currentMemberData, player)
-		validMemberNames = append(validMemberNames, player.Name)
-	}
-	for _, member := range cfg.Guild.Basement {
-		player := config.ConvertJsonToPlayer(member)
-		currentMemberData = append(currentMemberData, player)
-		validMemberNames = append(validMemberNames, player.Name)
-	}
-	for _, member := range cfg.Guild.Torrent {
-		player := config.ConvertJsonToPlayer(member)
-		currentMemberData = append(currentMemberData, player)
-		validMemberNames = append(validMemberNames, player.Name)
+
+	for _, guild := range guilds {
+		for _, member := range guild {
+			player := config.ConvertJsonToPlayer(member)
+			currentMemberData = append(currentMemberData, player)
+			validMemberNames = append(validMemberNames, player.Name)
+		}
 	}
 
 	return nil
@@ -46,11 +41,18 @@ func loadCurrentMemberData() error {
 
 // generate new player data for all names included in validMemberNames
 func loadNewMemberData() error {
+	var foundError bool
 	for _, name := range validMemberNames {
 		player, err := utils.ParseCharacterJSON(name)
 		if err != nil {
 			fmt.Printf("Error parsing character JSON for %s: %s\n", name, err)
-			return err
+			foundError = true
+			// go through all names before returning error
+			continue
+		}
+
+		if foundError {
+			return fmt.Errorf("one or more players failed to load")
 		}
 
 		newMemberData = append(newMemberData, player)
