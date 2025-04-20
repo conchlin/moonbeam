@@ -6,6 +6,7 @@ import (
 	"moonbeam/commands"
 	"moonbeam/config"
 	"moonbeam/guild"
+	"moonbeam/lottery"
 	"moonbeam/party"
 	"os"
 	"os/signal"
@@ -66,6 +67,8 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleBackupCreation(session, message)
 	case message.Content == "$applybackup":
 		commands.HandleApplyingBackup(session, message)
+	case message.Content == "$showlottery":
+		lottery.ShowLottery(session, message)
 	// for commands that use additional input we need strings.Contains
 	case strings.Contains(message.Content, "$guildlist"):
 		commands.HandleGuildList(session, message)
@@ -87,5 +90,9 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		commands.HandleNewGuildMember(session, message)
 	case strings.Contains(message.Content, "$removemember"):
 		commands.HandleMemberRemoval(session, message)
+	case strings.Contains(message.Content, "$createlottery"):
+		commands.HandleLotteryCreation(session, message)
+	case strings.Contains(message.Content, "$addlottery"):
+		commands.HandleAddContestant(session, message)
 	}
 }
