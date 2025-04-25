@@ -44,7 +44,6 @@ type GuildConfig struct {
 	Moonbeam []MemberInfo `json:"moonbeam"`
 	Lefay    []MemberInfo `json:"lefay"`
 	Basement []MemberInfo `json:"basement"`
-	Torrent  []MemberInfo `json:"torrent"`
 }
 
 type ActivityConfig struct {
@@ -188,8 +187,6 @@ func AddMember(user utils.Player, allianceMember string) error {
 		config.Guild.Lefay = append(config.Guild.Lefay, newMember)
 	} else if allianceMember == "--basement" || allianceMember == "basement" {
 		config.Guild.Basement = append(config.Guild.Basement, newMember)
-	} else if allianceMember == "--torrent" || allianceMember == "torrent" {
-		config.Guild.Torrent = append(config.Guild.Torrent, newMember)
 	}
 
 	config.Activity.Updated = append(config.Activity.Updated, timeNow)
@@ -220,7 +217,6 @@ func RefreshMemberList(data []utils.Player) error {
 	config.Guild.Moonbeam = nil
 	config.Guild.Lefay = nil
 	config.Guild.Basement = nil
-	config.Guild.Torrent = nil
 
 	for _, entry := range data {
 		updatedMember := MemberInfo{
@@ -240,8 +236,6 @@ func RefreshMemberList(data []utils.Player) error {
 			config.Guild.Lefay = append(config.Guild.Lefay, updatedMember)
 		} else if updatedMember.Guild == "Basement" {
 			config.Guild.Basement = append(config.Guild.Basement, updatedMember)
-		} else if updatedMember.Guild == "Torrent" {
-			config.Guild.Torrent = append(config.Guild.Torrent, updatedMember)
 		}
 	}
 
@@ -259,8 +253,7 @@ func RemoveMember(memberName string, allianceMember string) error {
 	index := -1
 	if strings.EqualFold(allianceMember, "moonbeam") ||
 		strings.EqualFold(allianceMember, "lefay") ||
-		strings.EqualFold(allianceMember, "basement") ||
-		strings.EqualFold(allianceMember, "torrent") {
+		strings.EqualFold(allianceMember, "basement") {
 		for i, member := range config.Guild.Moonbeam {
 			if strings.EqualFold(member.Name, memberName) {
 				index = i
@@ -280,8 +273,6 @@ func RemoveMember(memberName string, allianceMember string) error {
 		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
 	} else if strings.EqualFold(allianceMember, "basement") {
 		config.Guild.Basement = append(config.Guild.Basement[:index], config.Guild.Basement[index+1:]...)
-	} else if strings.EqualFold(allianceMember, "torrent") {
-		config.Guild.Torrent = append(config.Guild.Torrent[:index], config.Guild.Torrent[index+1:]...)
 	}
 
 	// Save the updated configuration to the JSON file
