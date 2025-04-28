@@ -9,15 +9,19 @@ import (
 	"time"
 )
 
-var currentMemberData []utils.Player
-var newMemberData []utils.Player
-var validMemberNames []string
+// reduce the amount of global variables with MemberData struct
+type MemberData struct {
+	CurrentData []utils.Player
+	NewData     []utils.Player
+	ValidNames  []string
+	mu          sync.Mutex
+}
+
 var ticker *time.Ticker
-var mu sync.Mutex
 
 // Load all JSON member entries into currentMemberInfo variable
 // we also load all member names into validMemberName variable
-func loadCurrentMemberData() error {
+func (md *MemberData) loadCurrentMemberData() error {
 	cfg := config.ParseConfig()
 
 	// use single guilds slice to reduce repetition
@@ -30,8 +34,8 @@ func loadCurrentMemberData() error {
 	for _, guild := range guilds {
 		for _, member := range guild {
 			player := config.ConvertJsonToPlayer(member)
-			currentMemberData = append(currentMemberData, player)
-			validMemberNames = append(validMemberNames, player.Name)
+			md.CurrentData = append(md.CurrentData, player)
+			md.ValidNames = append(md.ValidNames, player.Name)
 		}
 	}
 
@@ -39,9 +43,9 @@ func loadCurrentMemberData() error {
 }
 
 // generate new player data for all names included in validMemberNames
-func loadNewMemberData() error {
+func (md *MemberData) loadNewMemberData() error {
 	var foundError bool
-	for _, name := range validMemberNames {
+	for _, name := range md.ValidNames {
 		player, err := utils.ParseCharacterJSON(name)
 		if err != nil {
 			fmt.Printf("Error parsing character JSON for %s: %s\n", name, err)
@@ -54,7 +58,7 @@ func loadNewMemberData() error {
 			return fmt.Errorf("one or more players failed to load")
 		}
 
-		newMemberData = append(newMemberData, player)
+		md.NewData = append(md.NewData, player)
 	}
 
 	return nil
@@ -62,42 +66,42 @@ func loadNewMemberData() error {
 
 func StartMemberUpdateTask() {
 	ticker = time.NewTicker(15 * time.Minute)
+	memberData := &MemberData{}
 
 	go func() {
 		for range ticker.C {
-			err := loadCurrentMemberData()
-			if err != nil {
-				log.Printf("error in loading current member data %s", err)
-				clearData()
+			memberData.mu.Lock()
+
+			if err := memberData.loadCurrentMemberData(); err != nil {
+				log.Printf("error in loading current member data: %s", err)
+				memberData.mu.Unlock()
 				continue
 			}
 
-			err1 := loadNewMemberData()
-			if err1 != nil {
-				log.Printf("error in generating new member data %s", err)
-				clearData()
+			if err := memberData.loadNewMemberData(); err != nil {
+				log.Printf("error in generating new member data: %s", err)
+				memberData.mu.Unlock()
 				continue
 			}
 
-			diff, updatedPlayers := compareMemberData()
-			mu.Lock()
+			diff, updatedPlayers := memberData.compareMemberData()
 			if len(diff) != 0 {
 				CreateFeedPosts(diff)
 				FlagForUpdate(updatedPlayers)
-				config.RefreshMemberList(newMemberData)
+				config.RefreshMemberList(memberData.NewData)
 			}
 
-			clearData()
-			mu.Unlock()
+			memberData.clearData()
+			memberData.mu.Unlock()
 		}
 	}()
 }
 
-func compareMemberData() ([]Event, []string) {
+func (md *MemberData) compareMemberData() ([]Event, []string) {
 	var diffs []Event
 	var updatedPlayer []string = nil
-	for _, currentData := range currentMemberData {
-		for _, newData := range newMemberData {
+	for _, currentData := range md.CurrentData {
+		for _, newData := range md.NewData {
 			if currentData.Name == newData.Name {
 				if (currentData.Cards / 50) < (newData.Cards / 50) {
 					// display in multiples of 50
@@ -153,8 +157,8 @@ func compareMemberData() ([]Event, []string) {
 	return diffs, updatedPlayer
 }
 
-func clearData() {
-	currentMemberData = nil
-	newMemberData = nil
-	validMemberNames = nil
+func (md *MemberData) clearData() {
+	md.CurrentData = nil
+	md.NewData = nil
+	md.ValidNames = nil
 }
