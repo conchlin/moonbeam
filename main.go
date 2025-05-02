@@ -14,6 +14,26 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+var commandHandlers = map[string]func(session *discordgo.Session, message *discordgo.MessageCreate){
+	"$crossroads":     commands.HandleHelp,
+	"$showparties":    party.ShowAllParties,
+	"$docu":           commands.HandleDocu,
+	"$documentation":  commands.HandleDocu,
+	"$startguildfeed": guild.HandleStartFeed,
+	"$createbackup":   commands.HandleBackupCreation,
+	"$applybackup":    commands.HandleApplyingBackup,
+	"$guildlist":      commands.HandleGuildList,
+	"$createparty":    commands.HandleCreateParty,
+	"$joinparty":      commands.HandleJoinParty,
+	"$expel":          commands.HandleExpelMember,
+	"$deleteparty":    commands.HandlePartyDeletion,
+	"$invite":         commands.HandleInviteMember,
+	"$random":         commands.HandleListRandomizer,
+	"$character":      commands.HandleCharacterRequest,
+	"$addmember":      commands.HandleNewGuildMember,
+	"$removemember":   commands.HandleMemberRemoval,
+}
+
 func main() {
 	config := config.ParseConfig()
 
@@ -51,41 +71,14 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 		return
 	}
 
-	// handle commands
-	switch {
-	case message.Content == "$moonbeam":
-		commands.HandleHelp(session, message)
-	case message.Content == "$showparties":
-		party.ShowAllParties(session, message)
-	case message.Content == "$docu",
-		message.Content == "$documentation":
-		commands.HandleDocu(session, message)
-	case message.Content == "$startguildfeed":
-		guild.HandleStartFeed(session, message)
-	case message.Content == "$createbackup":
-		commands.HandleBackupCreation(session, message)
-	case message.Content == "$applybackup":
-		commands.HandleApplyingBackup(session, message)
-	// for commands that use additional input we need strings.Contains
-	case strings.Contains(message.Content, "$guildlist"):
-		commands.HandleGuildList(session, message)
-	case strings.Contains(message.Content, "$createparty"):
-		commands.HandleCreateParty(session, message)
-	case strings.Contains(message.Content, "$joinparty"):
-		commands.HandleJoinParty(session, message)
-	case strings.Contains(message.Content, "$expel"):
-		commands.HandleExpelMember(session, message)
-	case strings.Contains(message.Content, "$deleteparty"):
-		commands.HandlePartyDeletion(session, message)
-	case strings.Contains(message.Content, "$invite"):
-		commands.HandleInviteMember(session, message)
-	case strings.Contains(message.Content, "$random"):
-		commands.HandleListRandomizer(session, message)
-	case strings.Contains(message.Content, "$character"):
-		commands.HandleCharacterRequest(session, message)
-	case strings.Contains(message.Content, "$addmember"):
-		commands.HandleNewGuildMember(session, message)
-	case strings.Contains(message.Content, "$removemember"):
-		commands.HandleMemberRemoval(session, message)
+	fields := strings.Fields(message.Content)
+	if len(fields) == 0 {
+		return
+	}
+
+	command := fields[0]
+	handler, exists := commandHandlers[command]
+	if exists {
+		handler(session, message)
 	}
 }
