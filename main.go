@@ -42,7 +42,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Add event handler
+	discord.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildMembers
+
+	// handlers
+	discord.AddHandler(memberJoinHandler)
 	discord.AddHandler(newMessage)
 	guild.StartMemberUpdateTask()
 
@@ -80,5 +83,19 @@ func newMessage(session *discordgo.Session, message *discordgo.MessageCreate) {
 	handler, exists := commandHandlers[command]
 	if exists {
 		handler(session, message)
+	}
+}
+
+func memberJoinHandler(session *discordgo.Session, newMember *discordgo.GuildMemberAdd) {
+	var welcomeMessage strings.Builder
+	welcomeChannelID := "1191937521584721933"
+
+	welcomeMessage.WriteString(fmt.Sprintf("Welcome to the Crossroads Alliance Discord, <@%s>!\n\n", newMember.User.ID))
+	welcomeMessage.WriteString("To help us keep things organized, please update your server nickname to one of the following formats: ``Name (IGN)`` or ``IGN``\n")
+	welcomeMessage.WriteString("You can also introduce your character by using ``$character <ign>``")
+
+	_, err := session.ChannelMessageSend(welcomeChannelID, welcomeMessage.String())
+	if err != nil {
+		log.Printf("Error sending welcome message: %v", err)
 	}
 }
