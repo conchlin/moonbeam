@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"moonbeam/config"
 	"moonbeam/utils"
 	"strings"
@@ -19,23 +18,23 @@ func HandleNewGuildMember(session *discordgo.Session, message *discordgo.Message
 	ign := strings.TrimSpace(msgSplit[1])
 	guild := strings.TrimSpace(msgSplit[2])
 
-	perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
-	if e != nil {
-		fmt.Println(e.Error())
+	//perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
+	//if e != nil {
+	//	fmt.Println(e.Error())
+	//}
+	//if perms&discordgo.PermissionManageMessages == discordgo.PermissionManageMessages {
+	// verify if new member is a valid character
+	playerInfo, err := utils.ParseCharacterJSON(ign)
+	if err != nil {
+		utils.SendErrorMessage(session, message.ChannelID, err)
+		return
 	}
-	if perms&discordgo.PermissionManageMessages == discordgo.PermissionManageMessages {
-		// verify if new member is a valid character
-		playerInfo, err := utils.ParseCharacterJSON(ign)
-		if err != nil {
-			utils.SendErrorMessage(session, message.ChannelID, err)
-			return
-		}
-		err2 := config.AddMember(playerInfo, guild)
-		if err2 != nil {
-			utils.SendErrorMessage(session, message.ChannelID, err2)
-			return
-		}
+	err2 := config.AddMember(playerInfo, guild)
+	if err2 != nil {
+		utils.SendErrorMessage(session, message.ChannelID, err2)
+		return
+	}
 
-		utils.SendMessage(session, message.ChannelID, playerInfo.Name, "Successfully added to the guild list")
-	}
+	utils.SendMessage(session, message.ChannelID, playerInfo.Name, "Successfully added to the guild list")
+	//}
 }
