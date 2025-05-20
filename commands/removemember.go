@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"moonbeam/config"
 	"moonbeam/utils"
 	"strings"
@@ -19,14 +18,14 @@ func HandleMemberRemoval(session *discordgo.Session, message *discordgo.MessageC
 	ign := strings.TrimSpace(msgSplit[1])
 	guild := strings.TrimSpace(msgSplit[2])
 
-	perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
-	if e != nil {
-		fmt.Println(e.Error())
-	}
-	if perms&discordgo.PermissionManageMessages != discordgo.PermissionManageMessages {
-		utils.SendErrorMessage(session, message.ChannelID, fmt.Errorf("you do not have permission to use this command"))
-		return
-	}
+	//perms, e := session.UserChannelPermissions(message.Author.ID, message.ChannelID)
+	//if e != nil {
+	//	fmt.Println(e.Error())
+	//}
+	//if perms&discordgo.PermissionManageMessages != discordgo.PermissionManageMessages {
+	//	utils.SendErrorMessage(session, message.ChannelID, fmt.Errorf("you do not have permission to use this command"))
+	//	return
+	//}
 
 	err := config.RemoveMember(ign, guild)
 	if err != nil {
