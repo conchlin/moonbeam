@@ -29,6 +29,7 @@ func (md *MemberData) loadCurrentMemberData() error {
 		cfg.Guild.Moonbeam,
 		cfg.Guild.Lefay,
 		cfg.Guild.Basement,
+		cfg.Guild.Torrent,
 	}
 
 	for _, guild := range guilds {

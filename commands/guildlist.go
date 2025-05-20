@@ -59,6 +59,12 @@ func loadCurrentGuildMembers(allianceMember string) {
 			currentMemberList = append(currentMemberList, player)
 			memberStringList = append(memberStringList, player.Name)
 		}
+	} else if allianceMember == "torrent" {
+		for _, member := range cfg.Guild.Torrent {
+			player := config.ConvertJsonToPlayer(member)
+			currentMemberList = append(currentMemberList, player)
+			memberStringList = append(memberStringList, player.Name)
+		}
 	}
 }
 

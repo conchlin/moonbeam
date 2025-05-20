@@ -83,6 +83,8 @@ func addReactions(channelId, messageId, guildName string) {
 		unicode = "lefay:1308663511894986812"
 	} else if guildName == "Basement" {
 		unicode = "basement:1308663430797983745"
+	} else if guildName == "Torrent" {
+		unicode = "torrent:1347677865004634183"
 	}
 
 	err := s.MessageReactionAdd(channelId, messageId, unicode)
@@ -90,5 +92,5 @@ func addReactions(channelId, messageId, guildName string) {
 		fmt.Printf("Error adding reaction: %v\n", err)
 	}
 
-	//handle streak here
+	//handle streak here*/
 }
