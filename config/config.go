@@ -256,33 +256,34 @@ func RefreshMemberList(data []utils.Player) error {
 func RemoveMember(memberName string, allianceMember string) error {
 	config := ParseConfig()
 
+	var members *[]MemberInfo
+	switch strings.ToLower(allianceMember) {
+	case "moonbeam":
+		members = &config.Guild.Moonbeam
+	case "lefay":
+		members = &config.Guild.Lefay
+	case "basement":
+		members = &config.Guild.Basement
+	case "torrent":
+		members = &config.Guild.Torrent
+	default:
+		return fmt.Errorf("unknown alliance member: %s", allianceMember)
+	}
+
 	index := -1
-	if strings.EqualFold(allianceMember, "moonbeam") ||
-		strings.EqualFold(allianceMember, "lefay") ||
-		strings.EqualFold(allianceMember, "basement") ||
-		strings.EqualFold(allianceMember, "torrent") {
-		for i, member := range config.Guild.Moonbeam {
-			if strings.EqualFold(member.Name, memberName) {
-				index = i
-				break
-			}
+	for i, member := range *members {
+		if strings.EqualFold(member.Name, memberName) {
+			index = i
+			break
 		}
 	}
 
 	if index == -1 {
-		return fmt.Errorf("member %s not found", memberName)
+		return fmt.Errorf("member %s not found in %s", memberName, allianceMember)
 	}
 
 	// Remove the member from the slice
-	if strings.EqualFold(allianceMember, "moonbeam") {
-		config.Guild.Moonbeam = append(config.Guild.Moonbeam[:index], config.Guild.Moonbeam[index+1:]...)
-	} else if strings.EqualFold(allianceMember, "lefay") {
-		config.Guild.Lefay = append(config.Guild.Lefay[:index], config.Guild.Lefay[index+1:]...)
-	} else if strings.EqualFold(allianceMember, "basement") {
-		config.Guild.Basement = append(config.Guild.Basement[:index], config.Guild.Basement[index+1:]...)
-	} else if strings.EqualFold(allianceMember, "torrent") {
-		config.Guild.Torrent = append(config.Guild.Torrent[:index], config.Guild.Torrent[index+1:]...)
-	}
+	*members = append((*members)[:index], (*members)[index+1:]...)
 
 	// Save the updated configuration to the JSON file
 	if err := saveConfig(config); err != nil {
