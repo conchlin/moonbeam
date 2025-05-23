@@ -6,6 +6,7 @@ import (
 	"moonbeam/commands"
 	"moonbeam/config"
 	"moonbeam/guild"
+	"moonbeam/lottery"
 	"moonbeam/party"
 	"os"
 	"os/signal"
@@ -32,6 +33,9 @@ var commandHandlers = map[string]func(session *discordgo.Session, message *disco
 	"$character":      commands.HandleCharacterRequest,
 	"$addmember":      commands.HandleNewGuildMember,
 	"$removemember":   commands.HandleMemberRemoval,
+	"$lottery":        lottery.ShowLottery,
+	"$addlottery":     commands.HandleAddContestant,
+	"$createlottery":  commands.HandleLotteryCreation,
 }
 
 func main() {
