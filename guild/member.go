@@ -68,7 +68,7 @@ func (md *MemberData) loadNewMemberData() error {
 }
 
 func StartMemberUpdateTask() {
-	ticker = time.NewTicker(2 * time.Minute)
+	ticker = time.NewTicker(15 * time.Minute)
 	memberData := &MemberData{}
 
 	go func() {
