@@ -22,6 +22,8 @@ var ticker *time.Ticker
 // Load all JSON member entries into currentMemberInfo variable
 // we also load all member names into validMemberName variable
 func (md *MemberData) loadCurrentMemberData() error {
+	md.clearData()
+
 	cfg := config.ParseConfig()
 
 	// use single guilds slice to reduce repetition
@@ -66,7 +68,7 @@ func (md *MemberData) loadNewMemberData() error {
 }
 
 func StartMemberUpdateTask() {
-	ticker = time.NewTicker(15 * time.Minute)
+	ticker = time.NewTicker(2 * time.Minute)
 	memberData := &MemberData{}
 
 	go func() {
